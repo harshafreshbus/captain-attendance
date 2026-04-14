@@ -1,0 +1,207 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.card {
+  background-color: var(--surface);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cardLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.iconWrapper {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconBlue { background-color: rgba(11, 99, 255, 0.1); color: var(--brand-blue); }
+.iconGreen { background-color: rgba(34, 197, 94, 0.1); color: #22c55e; }
+.iconYellow { background-color: rgba(234, 179, 8, 0.1); color: #eab308; }
+.iconRed { background-color: rgba(239, 68, 68, 0.1); color: #ef4444; }
+
+.cardValue {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--brand-navy);
+  margin-top: 4px;
+}
+
+.highlightCard {
+  background: linear-gradient(135deg, var(--brand-blue), #5394ff);
+  color: white;
+  grid-column: span 4;
+  position: relative;
+  overflow: hidden;
+}
+
+.highlightCard .cardLabel,
+.highlightCard .cardValue {
+  color: white;
+}
+
+.highlightContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.statusIndicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 14px;
+  backdrop-filter: blur(4px);
+}
+
+.twoColLayout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--brand-navy);
+  margin-bottom: 16px;
+}
+
+/* Table styling */
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table th {
+  padding: 16px;
+  border-bottom: 1px solid #e2e8f0;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table td {
+  padding: 16px;
+  border-bottom: 1px solid #f1f5f9;
+  color: var(--brand-navy);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badgePresent { background-color: rgba(34, 197, 94, 0.1); color: #16a34a; }
+.badgeDelayed { background-color: rgba(234, 179, 8, 0.1); color: #ca8a04; }
+.badgeAbsent { background-color: rgba(239, 68, 68, 0.1); color: #dc2626; }
+
+.chartPlaceholder {
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  background-color: #f8fafc;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+@media (max-width: 1200px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .highlightCard {
+    grid-column: span 2;
+  }
+  .twoColLayout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .highlightCard {
+    grid-column: span 1;
+  }
+  .highlightContent {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
+
+/* Progress Bar */
+.progressContainer {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.progressTrack {
+  height: 8px;
+  width: 100%;
+  background-color: #f1f5f9;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progressBar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--brand-blue), #5394ff);
+  border-radius: 4px;
+  transition: width 0.5s ease-in-out;
+}
+.progressLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+}
+

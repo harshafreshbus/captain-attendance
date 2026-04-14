@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Minimal reset to ensure consistent form/control styles while preflight is verified */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+input, button, textarea, select {
+  font-family: inherit;
+}
+
+html, body, #__next {
+  height: 100%;
+}
+
+.fresh-hero { background: linear-gradient(180deg,#f8fafc,#fff); }
+
+:root{
+  --brand-blue: #0b63ff;
+  --brand-navy: #071032;
+  --muted: #64748b;
+  --surface: #ffffff;
+  --bg: #f6f9fb;
+}
+
+/* Login card */
+.login-card{
+  background: var(--surface);
+  padding: 2rem;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(9,30,66,0.08);
+}
+
+.logo-mark{
+  font-weight:700;
+  color:var(--brand-blue);
+  font-size:1.1rem;
+}
+
+.bg-bus{
+  background-image: linear-gradient(180deg, rgba(7,16,50,0.06), rgba(11,99,255,0.04)), url('/bus-sunset.svg');
+  background-size: cover;
+  background-position: center;
+  border-radius: 14px;
+  min-height: 420px;
+}
+
+.visual-card{ background: linear-gradient(180deg,#fff,#fbfdff); padding:12px; border-radius:10px; box-shadow:0 6px 18px rgba(11,99,255,0.04); }
+.bar-chart{ display:flex; gap:8px; align-items:end }
+.bar{ width:18px; background:linear-gradient(180deg,var(--brand-blue), #7fb3ff); border-radius:6px }
+.bar-label{ text-align:center; font-size:11px; margin-top:6px; color:var(--muted) }
+
+/* Cards & tables */
+.card { background:var(--surface); padding:1rem; border-radius:12px; box-shadow:0 8px 20px rgba(15,23,42,0.04) }
+
+/* Header */
+.app-header{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 20px; background:linear-gradient(90deg,rgba(255,255,255,0.6),rgba(255,255,255,0.4)); border-bottom:1px solid rgba(15,23,42,0.04) }
+
+/* Responsive tweaks */
+@media (max-width: 768px){
+  .container { padding-left: 1rem; padding-right:1rem }
+  .bg-bus{ display:none }
+}
+

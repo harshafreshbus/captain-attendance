@@ -1,0 +1,341 @@
+.container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--bg);
+  overflow: hidden;
+}
+
+.leftPanel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  background-color: var(--surface);
+  position: relative;
+  max-width: 500px;
+  box-shadow: 10px 0 30px rgba(0, 0, 0, 0.05);
+  z-index: 10;
+}
+
+.rightPanel {
+  flex: 2;
+  background-image: url('/bus_sunset_bg.png');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+/* Add a subtle overlay so the login card pops even more if the window gets small */
+.rightPanel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(11, 99, 255, 0.1) 0%, rgba(7, 16, 50, 0.3) 100%);
+}
+
+.loginCard {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.logoContainer {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logoIcon {
+  color: var(--brand-blue);
+}
+
+.logoText {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--brand-navy);
+  letter-spacing: -0.5px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--brand-navy);
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 24px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--brand-navy);
+}
+
+.input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+  background-color: #f8fafc;
+}
+
+.input:focus {
+  border-color: var(--brand-blue);
+  background-color: var(--surface);
+  box-shadow: 0 0 0 3px rgba(11, 99, 255, 0.1);
+}
+
+.forgotPassword {
+  font-size: 13px;
+  color: var(--brand-blue);
+  text-align: right;
+  cursor: pointer;
+  font-weight: 500;
+  margin-top: -8px;
+  margin-bottom: 8px;
+}
+
+.submitBtn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  background-color: var(--brand-navy);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(7, 16, 50, 0.2);
+}
+
+.submitBtn:hover {
+  background-color: #0b1a4a;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(7, 16, 50, 0.25);
+}
+
+.submitBtn:active {
+  transform: translateY(0);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+  margin: 16px 0;
+}
+
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.divider:not(:empty)::before {
+  margin-right: .5em;
+}
+
+.divider:not(:empty)::after {
+  margin-left: .5em;
+}
+
+.secondaryBtn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  background-color: transparent;
+  color: var(--brand-navy);
+  font-size: 15px;
+  font-weight: 600;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.secondaryBtn:hover {
+  background-color: #f1f5f9;
+}
+
+/* Login Method Toggle */
+.methodToggle {
+  display: flex;
+  gap: 8px;
+  background-color: #f3f4f6;
+  padding: 4px;
+  border-radius: 8px;
+  margin-top: 16px;
+}
+
+.toggleButton {
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: 6px;
+  border: none;
+  background-color: transparent;
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.toggleButton.active {
+  background-color: #ffffff;
+  color: #1f2937;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Error Message */
+.errorMessage {
+  background-color: #fef2f2;
+  color: #dc2626;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid #fee2e2;
+}
+
+/* Form Container */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formOtp {
+  gap: 16px;
+}
+
+/* Input Icon Container */
+.inputIconContainer {
+  position: relative;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+}
+
+.inputWithIcon {
+  padding-left: 44px;
+}
+
+/* OTP Input Specific */
+.otpInput {
+  letter-spacing: 8px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Button with Icon */
+.buttonWithIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* Secondary Text Button */
+.textButton {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 8px;
+  transition: all 0.2s ease;
+}
+
+.textButton:hover {
+  color: var(--brand-blue);
+}
+
+/* Demo Buttons Container */
+.demoBtnContainer {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+}
+
+.demoBtnRow {
+  display: flex;
+  gap: 10px;
+}
+
+.demoBtnSmall {
+  flex: 1;
+  font-size: 13px;
+}
+
+/* Form Margin Adjustments */
+.formGroupNoMargin {
+  margin-bottom: 0;
+}
+
+.submitBtnForm {
+  margin-top: 8px;
+}
+
+.submitBtnOtp {
+  margin-top: 8px;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@media (max-width: 900px) {
+  .rightPanel {
+    display: none;
+  }
+  .leftPanel {
+    max-width: 100%;
+    width: 100%;
+  }
+  .loginCard {
+    max-width: 400px;
+  }
+}

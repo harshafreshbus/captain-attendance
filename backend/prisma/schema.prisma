@@ -1,0 +1,3269 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                                                                              Int                              @id @default(autoincrement())
+  email                                                                           String?
+  password                                                                        String
+  firstName                                                                       String?
+  lastName                                                                        String?
+  address                                                                         String?
+  age                                                                             Int?
+  createdAt                                                                       DateTime                         @default(now())
+  updatedAt                                                                       DateTime
+  mobile                                                                          String                           @unique
+  otp                                                                             Int?
+  otpCreatedAt                                                                    DateTime?
+  userTypeId                                                                      Int                              @default(1)
+  active                                                                          Boolean                          @default(true)
+  createdBy                                                                       Int?
+  userName                                                                        String?
+  depotId                                                                         Int?
+  depotStationId                                                                  Int?
+  employeeId                                                                      String?
+  AgentCommissionTransactions                                                     AgentCommissionTransactions[]
+  AgentPaymentTransactions_AgentPaymentTransactions_createdByIdToUser             AgentPaymentTransactions[]       @relation("AgentPaymentTransactions_createdByIdToUser")
+  AgentPaymentTransactions_AgentPaymentTransactions_uuidToUser                    AgentPaymentTransactions[]       @relation("AgentPaymentTransactions_uuidToUser")
+  AlcobrakeDeviceStatusLog                                                        AlcobrakeDeviceStatusLog[]
+  AlcoholTestResult                                                               AlcoholTestResult[]
+  BoardingPoints                                                                  BoardingPoints[]
+  BreakPadReplacements                                                            BreakPadReplacements[]
+  CaptainIncentives                                                               CaptainIncentives[]
+  DiscountStrategies_DiscountStrategies_createdByIdToUser                         DiscountStrategies[]             @relation("DiscountStrategies_createdByIdToUser")
+  DiscountStrategies_DiscountStrategies_modifiedByIdToUser                        DiscountStrategies[]             @relation("DiscountStrategies_modifiedByIdToUser")
+  DroppingPoints                                                                  DroppingPoints[]
+  PromiseTransactionApprovals                                                     PromiseTransactionApprovals[]
+  PromiseTransactionRequests                                                      PromiseTransactionRequests[]
+  ReservedTicketSeats                                                             ReservedTicketSeats[]
+  Tasks_Tasks_assignedToIdToUser                                                  Tasks[]                          @relation("Tasks_assignedToIdToUser")
+  Tasks_Tasks_createdByIdToUser                                                   Tasks[]                          @relation("Tasks_createdByIdToUser")
+  TempTicketBill                                                                  TempTicketBill[]
+  TempTickets                                                                     TempTickets[]
+  TicketTransactions                                                              TicketTransactions[]
+  TripBoardingPointTimingUpdates                                                  TripBoardingPointTimingUpdates[]
+  TripBoardingPointsDelay                                                         TripBoardingPointsDelay[]
+  TripBreakdownQuestions                                                          TripBreakdownQuestions[]
+  TripBreakdowns                                                                  TripBreakdowns[]
+  TripCancellations_TripCancellations_ApprovedByIdToUser                          TripCancellations[]              @relation("TripCancellations_ApprovedByIdToUser")
+  TripCancellations_TripCancellations_createdByIdToUser                           TripCancellations[]              @relation("TripCancellations_createdByIdToUser")
+  TripDelays_TripDelays_ApprovedByIdToUser                                        TripDelays[]                     @relation("TripDelays_ApprovedByIdToUser")
+  TripDelays_TripDelays_createdByIdToUser                                         TripDelays[]                     @relation("TripDelays_createdByIdToUser")
+  TripDiscounts_TripDiscounts_createdByIdToUser                                   TripDiscounts[]                  @relation("TripDiscounts_createdByIdToUser")
+  TripDiscounts_TripDiscounts_modifiedByIdToUser                                  TripDiscounts[]                  @relation("TripDiscounts_modifiedByIdToUser")
+  TripDroppingPointTimingUpdates                                                  TripDroppingPointTimingUpdates[]
+  TripDroppingPointsDelay                                                         TripDroppingPointsDelay[]
+  TripFareHistory                                                                 TripFareHistory[]
+  TripQuestions                                                                   TripQuestions[]
+  TripReassigns_TripReassigns_approvedByIdToUser                                  TripReassigns[]                  @relation("TripReassigns_approvedByIdToUser")
+  TripReassigns_TripReassigns_captainIdToUser                                     TripReassigns[]                  @relation("TripReassigns_captainIdToUser")
+  TripReassigns_TripReassigns_coCaptainIdToUser                                   TripReassigns[]                  @relation("TripReassigns_coCaptainIdToUser")
+  TripReassigns_TripReassigns_createdByIdToUser                                   TripReassigns[]                  @relation("TripReassigns_createdByIdToUser")
+  TripReassigns_TripReassigns_prevCaptainIdToUser                                 TripReassigns[]                  @relation("TripReassigns_prevCaptainIdToUser")
+  TripReassigns_TripReassigns_prevCoCaptainIdToUser                               TripReassigns[]                  @relation("TripReassigns_prevCoCaptainIdToUser")
+  TripSeats                                                                       TripSeats[]
+  TripUserAttributes                                                              TripUserAttributes[]
+  Trips_Trips_captainIdToUser                                                     Trips[]                          @relation("Trips_captainIdToUser")
+  Trips_Trips_createdByIdToUser                                                   Trips[]                          @relation("Trips_createdByIdToUser")
+  TyreSwitches                                                                    TyreSwitches[]
+  TyresQuestions                                                                  TyresQuestions[]
+  User                                                                            User?                            @relation("UserToUser", fields: [createdBy], references: [id])
+  other_User                                                                      User[]                           @relation("UserToUser")
+  Depots                                                                          Depots?                          @relation(fields: [depotId], references: [id])
+  Stations                                                                        Stations?                        @relation(fields: [depotStationId], references: [id])
+  UserTypes                                                                       UserTypes                        @relation(fields: [userTypeId], references: [id])
+  UserAgentBalanceHistory                                                         UserAgentBalanceHistory[]
+  UserAgentDetails_UserAgentDetails_salesPersonIdToUser                           UserAgentDetails[]               @relation("UserAgentDetails_salesPersonIdToUser")
+  UserAgentDetails                                                                UserAgentDetails?
+  UserAnalyticsEvent                                                              UserAnalyticsEvent[]
+  UserAttribute                                                                   UserAttribute[]
+  UserMetaData                                                                    UserMetaData[]
+  UserMobileTokens                                                                UserMobileTokens[]
+  UserShifts                                                                      UserShifts[]
+  UserSpecificPrivileges                                                          UserSpecificPrivileges[]
+  UserTokens                                                                      UserTokens[]
+  VehicleComponentObservations_VehicleComponentObservations_createdByIdToUser     VehicleComponentObservations[]   @relation("VehicleComponentObservations_createdByIdToUser")
+  VehicleComponentObservations_VehicleComponentObservations_resolvedByIdToUser    VehicleComponentObservations[]   @relation("VehicleComponentObservations_resolvedByIdToUser")
+  VehicleLiveComponentsHistory_VehicleLiveComponentsHistory_installedByIdToUser   VehicleLiveComponentsHistory[]   @relation("VehicleLiveComponentsHistory_installedByIdToUser")
+  VehicleLiveComponentsHistory_VehicleLiveComponentsHistory_uninstalledByIdToUser VehicleLiveComponentsHistory[]   @relation("VehicleLiveComponentsHistory_uninstalledByIdToUser")
+  VehicleObservations                                                             VehicleObservations[]
+  VehicleQuestions                                                                VehicleQuestions[]
+  StationsToUser                                                                  StationsToUser[]
+  tripCaptains                                                                    tripCaptains[]
+  tripReassignCaptains                                                            tripReassignCaptains[]
+  tripReassignPreviousCaptains                                                    tripReassignPreviousCaptains[]
+  alcoholInitiateHistory                                                          alcoholInitiateHistory[]
+}
+
+model AgentCommissionTransactions {
+  id                                              Int                                               @id @default(autoincrement())
+  uuid                                            Int
+  financialTransactionType                        FinanceTransactionTypes                           @default(Credit)
+  amount                                          Decimal
+  loaderFee                                       Decimal                                           @default(0)
+  markup                                          Decimal                                           @default(0)
+  comment                                         String?
+  createdAt                                       DateTime                                          @default(now())
+  active                                          Boolean                                           @default(true)
+  User                                            User                                              @relation(fields: [uuid], references: [id])
+  AgentCommissionTransactionsToTicketTransactions AgentCommissionTransactionsToTicketTransactions[]
+}
+
+model AgentPaymentTransactions {
+  id                                              Int                         @id @default(autoincrement())
+  uuid                                            Int
+  amount                                          Decimal
+  paymentId                                       Int?                        @unique
+  comment                                         String?
+  createdById                                     Int
+  createdAt                                       DateTime                    @default(now())
+  active                                          Boolean                     @default(true)
+  reason                                          RechargeReason?
+  remarks                                         String?                     @db.VarChar
+  updatedAt                                       DateTime?
+  User_AgentPaymentTransactions_createdByIdToUser User                        @relation("AgentPaymentTransactions_createdByIdToUser", fields: [createdById], references: [id])
+  PaymentGatewayTransactions                      PaymentGatewayTransactions? @relation(fields: [paymentId], references: [id])
+  User_AgentPaymentTransactions_uuidToUser        User                        @relation("AgentPaymentTransactions_uuidToUser", fields: [uuid], references: [id])
+}
+
+model Amenities {
+  id                  Int                   @id @default(autoincrement())
+  name                String
+  description         String
+  image               String
+  icon                String
+  active              Boolean               @default(true)
+  AmenitiesToServices AmenitiesToServices[]
+  AmenitiesToTrips    AmenitiesToTrips[]
+}
+
+model BoardingPoints {
+  id                      Int                       @id @default(autoincrement())
+  name                    String
+  stationId               Int
+  latitude                Float
+  longitude               Float
+  landmark                String
+  locationURL             String
+  locationURL360          String
+  mobile                  String?
+  createdById             Int
+  active                  Boolean                   @default(true)
+  User                    User                      @relation(fields: [createdById], references: [id])
+  Stations                Stations                  @relation(fields: [stationId], references: [id])
+  RescheduleTicketSeats   RescheduleTicketSeats[]
+  ReservedTickets         ReservedTickets[]
+  ServiceBoardingPoints   ServiceBoardingPoints[]
+  TripBoardingPoints      TripBoardingPoints[]
+  TripBoardingPointsDelay TripBoardingPointsDelay[]
+
+  @@index([stationId])
+}
+
+model BreakdownReasons {
+  id             Int              @id @default(autoincrement())
+  name           String
+  active         Boolean          @default(true)
+  category       String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime?
+  TripBreakdowns TripBreakdowns[]
+}
+
+model CancellationPolicies {
+  id                                                                              Int                         @id @default(autoincrement())
+  name                                                                            String
+  active                                                                          Boolean                     @default(true)
+  customerActive                                                                  Boolean                     @default(true)
+  coinsPolicy                                                                     Boolean                     @default(false)
+  CancellationPolicySlabs                                                         CancellationPolicySlabs[]
+  ReservedTickets_ReservedTickets_baseCancellationPolicyIdToCancellationPolicies  ReservedTickets[]           @relation("ReservedTickets_baseCancellationPolicyIdToCancellationPolicies")
+  ReservedTickets_ReservedTickets_coinsCancellationPolicyIdToCancellationPolicies ReservedTickets[]           @relation("ReservedTickets_coinsCancellationPolicyIdToCancellationPolicies")
+  TicketCancellationDetails                                                       TicketCancellationDetails[]
+}
+
+model CancellationPolicySlabs {
+  id                   Int                  @id @default(autoincrement())
+  timetoStartHours     Int
+  percentageRefund     Int
+  policyId             Int
+  active               Boolean              @default(true)
+  CancellationPolicies CancellationPolicies @relation(fields: [policyId], references: [id])
+}
+
+model CancellationReasons {
+  id                Int                 @id @default(autoincrement())
+  name              String
+  active            Boolean             @default(true)
+  category          String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime?
+  TripBreakdowns    TripBreakdowns[]
+  TripCancellations TripCancellations[]
+  Trips             Trips[]
+}
+
+model CustomerTokens {
+  customerId   Int
+  refreshToken String
+  createdAt    DateTime  @default(now())
+  deviceId     String    @default("FreshBus")
+  fcmToken     String?
+  apnsToken    String?
+  Customers    Customers @relation(fields: [customerId], references: [id])
+
+  @@unique([customerId, deviceId])
+}
+
+model Customers {
+  id                          Int                           @id @default(autoincrement())
+  name                        String                        @default("")
+  mobile                      String?                       @unique
+  email                       String?
+  otp                         Int?
+  otpCreatedAt                DateTime?
+  address                     String?
+  state                       String?
+  age                         Int?                          @default(0)
+  gender                      Gender                        @default(Male)
+  consent                     Boolean                       @default(false)
+  direct                      Boolean                       @default(true)
+  createdAt                   DateTime                      @default(now())
+  availableCoins              Int                           @default(0)
+  availablePasses             Int                           @default(0)
+  active                      Boolean                       @default(true)
+  imageURL                    String?
+  kilometersTravelled         Int                           @default(0)
+  pincode                     String?
+  referralCode                String?                       @unique
+  referredById                Int?
+  lastSignIn                  DateTime                      @default(now())
+  abhibusJoinDate             DateTime?
+  joinDate                    DateTime?
+  offlineJoinDate             DateTime?
+  onlineJoinDate              DateTime?
+  paytmJoinDate               DateTime?
+  redbusJoinDate              DateTime?
+  isMobileLoggedIn            Boolean                       @default(false)
+  isNewUser                   Boolean                       @default(true)
+  appVersion                  String?
+  hashId                      String?                       @unique
+  dateOfBirth                 DateTime?
+  dobUpdatedOnce              Boolean?
+  BookingAdAttribution        BookingAdAttribution[]
+  CustomerDiscounts           CustomerDiscounts[]
+  CustomerMobileTokens        CustomerMobileTokens[]
+  CustomerRewards             CustomerRewards[]
+  CustomerTokens              CustomerTokens[]
+  CustomerUdf                 CustomerUdf[]
+  Customers                   Customers?                    @relation("CustomersToCustomers", fields: [referredById], references: [id])
+  other_Customers             Customers[]                   @relation("CustomersToCustomers")
+  FeedbackResponses           FeedbackResponses[]
+  FreshCardOffer              FreshCardOffer[]
+  FreshCardPurchases          FreshCardPurchases[]
+  FreshCardTicketTransactions FreshCardTicketTransactions[]
+  FreshPassPurchases          FreshPassPurchases[]
+  FreshPassTicketTransactions FreshPassTicketTransactions[]
+  GreenCoinTransactions       GreenCoinTransactions[]
+  InstallReferrerEvent        InstallReferrerEvent[]
+  Passengers                  Passengers[]
+  ReservedTickets             ReservedTickets[]
+}
+
+model DelayIntervals {
+  id               Int          @id @default(autoincrement())
+  name             String
+  active           Boolean      @default(true)
+  approvalRequired Boolean      @default(false)
+  TripDelays       TripDelays[]
+}
+
+model DelayReasons {
+  id          Int          @id @default(autoincrement())
+  name        String
+  active      Boolean      @default(true)
+  subCategory String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime?
+  TripDelays  TripDelays[]
+}
+
+model DroppingPoints {
+  id                      Int                       @id @default(autoincrement())
+  name                    String
+  stationId               Int
+  latitude                Float
+  longitude               Float
+  landmark                String
+  locationURL             String
+  locationURL360          String
+  mobile                  String?
+  createdById             Int
+  active                  Boolean                   @default(true)
+  User                    User                      @relation(fields: [createdById], references: [id])
+  Stations                Stations                  @relation(fields: [stationId], references: [id])
+  RescheduleTicketSeats   RescheduleTicketSeats[]
+  ReservedTickets         ReservedTickets[]
+  ServiceDroppingPoints   ServiceDroppingPoints[]
+  TripDroppingPoints      TripDroppingPoints[]
+  TripDroppingPointsDelay TripDroppingPointsDelay[]
+}
+
+model FeedbackQuestions {
+  id                Int                 @id @default(autoincrement())
+  name              String
+  active            Boolean             @default(true)
+  description       String
+  negative          String
+  positive          String
+  order             Int?
+  FeedbackResponses FeedbackResponses[]
+}
+
+model FeedbackResponses {
+  id                Int               @id @default(autoincrement())
+  questionId        Int
+  customerId        Int?
+  ticketId          Int
+  answer            String
+  createdAt         DateTime          @default(now())
+  comment           String?
+  Customers         Customers?        @relation(fields: [customerId], references: [id])
+  FeedbackQuestions FeedbackQuestions @relation(fields: [questionId], references: [id])
+  ReservedTickets   ReservedTickets   @relation(fields: [ticketId], references: [id])
+
+  @@unique([ticketId, questionId])
+}
+
+model FreshPass {
+  id                 Int                  @id @default(autoincrement())
+  name               String
+  daysEnabled        Int                  @default(127)
+  fare               Decimal
+  tax                Decimal
+  seats              Int
+  usage              Int
+  Limit              Int
+  active             Boolean              @default(true)
+  discount           Decimal              @default(0)
+  FreshPassPurchases FreshPassPurchases[]
+}
+
+model FreshPassPurchases {
+  id                          Int                           @id @default(autoincrement())
+  customerId                  Int
+  amount                      Decimal
+  tax                         Decimal
+  giftCode                    String?                       @unique
+  paymentId                   Int?
+  comment                     String?
+  freshpassId                 Int
+  createdAt                   DateTime                      @default(now())
+  active                      Boolean                       @default(true)
+  Customers                   Customers                     @relation(fields: [customerId], references: [id])
+  FreshPass                   FreshPass                     @relation(fields: [freshpassId], references: [id])
+  PaymentGatewayTransactions  PaymentGatewayTransactions?   @relation(fields: [paymentId], references: [id])
+  FreshPassTicketTransactions FreshPassTicketTransactions[]
+}
+
+model FreshPassTicketTransactions {
+  id                     Int                     @id @default(autoincrement())
+  customerId             Int
+  freshpassTransactionId Int?
+  financeTransactionType FinanceTransactionTypes @default(Debit)
+  passes                 Int
+  reference              String?
+  comment                String?
+  ticketTransactionId    Int?                    @unique
+  createdAt              DateTime                @default(now())
+  active                 Boolean                 @default(true)
+  freshPassId            Int?
+  currentPasses          Int                     @default(0)
+  Customers              Customers               @relation(fields: [customerId], references: [id])
+  FreshPassPurchases     FreshPassPurchases?     @relation(fields: [freshpassTransactionId], references: [id])
+  TicketTransactions     TicketTransactions?     @relation(fields: [ticketTransactionId], references: [id])
+}
+
+model GlobalConfigurations {
+  id     Int     @id @default(autoincrement())
+  name   String
+  value  String
+  active Boolean @default(true)
+}
+
+model GreenCoinTransactions {
+  id                                                                                            Int                              @id @default(autoincrement())
+  customerId                                                                                    Int
+  financeTransactionType                                                                        FinanceTransactionTypes          @default(Debit)
+  transactionType                                                                               GreenCoinTransactionTypes        @default(Booked)
+  coins                                                                                         Int
+  reference                                                                                     String?
+  comment                                                                                       String?
+  transactionId                                                                                 Int?
+  createdAt                                                                                     DateTime                         @default(now())
+  active                                                                                        Boolean                          @default(true)
+  currentCoins                                                                                  Int                              @default(0)
+  expiryAt                                                                                      DateTime?                        @db.Timestamp(6)
+  remainingCoins                                                                                Int?
+  availableAt                                                                                   DateTime?
+  blockId                                                                                       Int?
+  CustomerRewards                                                                               CustomerRewards[]
+  Customers                                                                                     Customers                        @relation(fields: [customerId], references: [id])
+  TicketTransactions                                                                            TicketTransactions?              @relation(fields: [transactionId], references: [id])
+  GreenCoinsSubDebitTransactions_GreenCoinsSubDebitTransactions_creditIdToGreenCoinTransactions GreenCoinsSubDebitTransactions[] @relation("GreenCoinsSubDebitTransactions_creditIdToGreenCoinTransactions")
+  GreenCoinsSubDebitTransactions_GreenCoinsSubDebitTransactions_debitIdToGreenCoinTransactions  GreenCoinsSubDebitTransactions[] @relation("GreenCoinsSubDebitTransactions_debitIdToGreenCoinTransactions")
+  ReservedTickets                                                                               ReservedTickets[]
+}
+
+model ManageUserPermissions {
+  id           Int       @id @default(autoincrement())
+  userTypeId   Int
+  privilegeBit Int
+  UserTypes    UserTypes @relation(fields: [userTypeId], references: [id])
+}
+
+model NotBoardedReasons {
+  id                  Int                   @id @default(autoincrement())
+  name                String
+  active              Boolean               @default(true)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime?
+  ReservedTicketSeats ReservedTicketSeats[]
+}
+
+model Passengers {
+  id                  Int                   @id @default(autoincrement())
+  name                String?
+  customerId          Int
+  age                 Int?
+  gender              Gender                @default(Male)
+  createdAt           DateTime              @default(now())
+  active              Boolean               @default(true)
+  Customers           Customers             @relation(fields: [customerId], references: [id])
+  ReservedTicketSeats ReservedTicketSeats[]
+
+  @@unique([customerId, name, age, gender])
+}
+
+model PaymentGatewayTransactions {
+  id                       Int                       @id @default(autoincrement())
+  createdAt                DateTime                  @default(now())
+  transactionId            String
+  orderId                  String                    @unique
+  amount                   Decimal
+  paymentGatewayName       String                    @default("JUSPAY")
+  status                   String                    @default("NEW")
+  pollingTriggered         Boolean                   @default(false)
+  updatedAt                DateTime?
+  response                 Json?
+  AgentPaymentTransactions AgentPaymentTransactions?
+  FreshCardPurchases       FreshCardPurchases[]
+  FreshPassPurchases       FreshPassPurchases[]
+  TicketTransactions       TicketTransactions[]
+}
+
+model QuestionCategories {
+  id         Int         @id @default(autoincrement())
+  name       String
+  order      Int
+  userTypeId Int
+  active     Boolean     @default(true)
+  UserTypes  UserTypes   @relation(fields: [userTypeId], references: [id])
+  Questions  Questions[]
+}
+
+model QuestionTypes {
+  id        Int         @id @default(autoincrement())
+  name      String
+  active    Boolean     @default(true)
+  Questions Questions[]
+}
+
+model Questions {
+  id                     Int                      @id @default(autoincrement())
+  name                   String
+  active                 Boolean                  @default(true)
+  hint                   String?
+  questionTypeId         Int
+  categoryId             Int
+  maintenanceCategoryId  Int?
+  isSleeper              Boolean                  @default(false)
+  QuestionCategories     QuestionCategories       @relation(fields: [categoryId], references: [id])
+  MaintenanceCategories  MaintenanceCategories?   @relation(fields: [maintenanceCategoryId], references: [id])
+  QuestionTypes          QuestionTypes            @relation(fields: [questionTypeId], references: [id])
+  TripBreakdownQuestions TripBreakdownQuestions[]
+  TripQuestions          TripQuestions[]
+  TyresQuestions         TyresQuestions[]
+  VehicleQuestions       VehicleQuestions[]
+}
+
+model ReservedTicketSeats {
+  id                                      Int                                       @id @default(autoincrement())
+  amount                                  Decimal
+  discount                                Decimal
+  commission                              Decimal                                   @default(0)
+  loaderFee                               Decimal                                   @default(0)
+  markup                                  Decimal                                   @default(0)
+  ticketId                                Int
+  passengerId                             Int
+  seatId                                  Int
+  createdAt                               DateTime                                  @default(now())
+  isBoarded                               Boolean                                   @default(false)
+  isMealProvided                          Boolean                                   @default(false)
+  active                                  Boolean                                   @default(true)
+  boardedAt                               DateTime?
+  boardedById                             Int?
+  coins                                   Int                                       @default(0)
+  notBoardedReasonId                      Int?
+  pass                                    Boolean                                   @default(false)
+  kilometersTravelled                     Int                                       @default(300)
+  tax                                     Decimal                                   @default(0)
+  couponDiscount                          Decimal                                   @default(0)
+  employeeCouponId                        Int?
+  promise                                 Boolean?
+  retentioncoins                          Boolean?
+  BoardStatusHistory                      BoardStatusHistory[]
+  User                                    User?                                     @relation(fields: [boardedById], references: [id])
+  EmployeeCoupons                         EmployeeCoupons?                          @relation(fields: [employeeCouponId], references: [id])
+  NotBoardedReasons                       NotBoardedReasons?                        @relation(fields: [notBoardedReasonId], references: [id])
+  Passengers                              Passengers                                @relation(fields: [passengerId], references: [id])
+  Seats                                   Seats                                     @relation(fields: [seatId], references: [id])
+  ReservedTickets                         ReservedTickets                           @relation(fields: [ticketId], references: [id])
+  ReservedTicketSeatsToTicketTransactions ReservedTicketSeatsToTicketTransactions[]
+
+  @@index([ticketId])
+}
+
+model ReservedTickets {
+  id                                                                                   Int                     @id @default(autoincrement())
+  customerId                                                                           Int
+  serviceId                                                                            Int?
+  tripId                                                                               Int
+  createdAt                                                                            DateTime                @default(now())
+  boardingTime                                                                         DateTime
+  boardingPointId                                                                      Int
+  droppingTime                                                                         DateTime?
+  droppingPointId                                                                      Int
+  invoiceNumber                                                                        String                  @default("FRE")
+  active                                                                               Boolean                 @default(true)
+  tempTicketId                                                                         Int?                    @unique
+  mobile                                                                               String?
+  name                                                                                 String?
+  mainCategory                                                                         MainCategory?
+  subCategory                                                                          SubCategory?
+  baseCancellationPolicyId                                                             Int                     @default(7)
+  coinsCancellationPolicyId                                                            Int                     @default(8)
+  didCaptainCall                                                                       Int                     @default(0)
+  bookingHashId                                                                        String?
+  freshcard                                                                            Int                     @default(0)
+  email                                                                                String?
+  actualBoardingTime                                                                   DateTime?
+  actualDroppingTime                                                                   DateTime?
+  communicatedBoardingTime                                                             DateTime?
+  communicatedDroppingTime                                                             DateTime?
+  boardingCoveredBy                                                                    GPSTelematicsDevice?
+  droppingCoveredBy                                                                    GPSTelematicsDevice?
+  isBoardingCovered                                                                    Boolean                 @default(false)
+  isDroppingCovered                                                                    Boolean                 @default(false)
+  loyaltyBonusId                                                                       Int?
+  boardingIvr                                                                          DateTime?
+  discountId                                                                           Int?
+  referredByCaptain                                                                    Boolean                 @default(false)
+  assured                                                                              Boolean                 @default(false)
+  couponCode                                                                           String?                 @default("")
+  couponId                                                                             String?                 @default("")
+  BookingAdAttribution_BookingAdAttribution_bookingIdToReservedTickets                 BookingAdAttribution?   @relation("BookingAdAttribution_bookingIdToReservedTickets")
+  BookingAdAttribution_BookingAdAttribution_tempTicketIdToReservedTickets              BookingAdAttribution?   @relation("BookingAdAttribution_tempTicketIdToReservedTickets")
+  CaptainIncentives                                                                    CaptainIncentives[]
+  CustomerDiscounts_CustomerDiscounts_ticketIdToReservedTickets                        CustomerDiscounts[]     @relation("CustomerDiscounts_ticketIdToReservedTickets")
+  CustomerRatings                                                                      CustomerRatings?
+  FeedbackResponses                                                                    FeedbackResponses[]
+  PromiseTransactions                                                                  PromiseTransactions[]
+  ReservedTicketSeats                                                                  ReservedTicketSeats[]
+  CancellationPolicies_ReservedTickets_baseCancellationPolicyIdToCancellationPolicies  CancellationPolicies    @relation("ReservedTickets_baseCancellationPolicyIdToCancellationPolicies", fields: [baseCancellationPolicyId], references: [id])
+  BoardingPoints                                                                       BoardingPoints          @relation(fields: [boardingPointId], references: [id])
+  CancellationPolicies_ReservedTickets_coinsCancellationPolicyIdToCancellationPolicies CancellationPolicies    @relation("ReservedTickets_coinsCancellationPolicyIdToCancellationPolicies", fields: [coinsCancellationPolicyId], references: [id])
+  Customers                                                                            Customers               @relation(fields: [customerId], references: [id])
+  CustomerDiscounts_ReservedTickets_discountIdToCustomerDiscounts                      CustomerDiscounts?      @relation("ReservedTickets_discountIdToCustomerDiscounts", fields: [discountId], references: [id])
+  DroppingPoints                                                                       DroppingPoints          @relation(fields: [droppingPointId], references: [id])
+  GreenCoinTransactions                                                                GreenCoinTransactions?  @relation(fields: [loyaltyBonusId], references: [id])
+  Services                                                                             Services?               @relation(fields: [serviceId], references: [id])
+  Trips                                                                                Trips                   @relation(fields: [tripId], references: [id])
+  SMSMessages                                                                          SMSMessages[]
+  TicketBoardingHistory                                                                TicketBoardingHistory[]
+  TicketDroppingHistory                                                                TicketDroppingHistory[]
+  TicketTransactions                                                                   TicketTransactions[]
+  WhatsappMessages                                                                     WhatsappMessages[]
+
+  @@index([tripId])
+}
+
+model Seats {
+  id                         Int                          @id @default(autoincrement())
+  name                       String
+  vehicleTypeId              Int                          @default(1)
+  positionX                  Int
+  positionY                  Int
+  active                     Boolean                      @default(true)
+  seatType                   SeatTypes                    @default(seater)
+  extraLegRoom               Boolean                      @default(false)
+  isRecliner                 Boolean                      @default(false)
+  length                     Int                          @default(1)
+  positionZ                  Int                          @default(0)
+  width                      Int                          @default(1)
+  ReservedTicketSeats        ReservedTicketSeats[]
+  VehicleTypes               VehicleTypes                 @relation(fields: [vehicleTypeId], references: [id])
+  TripSeatAvailabilityStatus TripSeatAvailabilityStatus[]
+  TripSeats                  TripSeats[]
+
+  @@unique([vehicleTypeId, name])
+}
+
+model ServiceBoardingPoints {
+  boardingPointId Int
+  serviceId       Int
+  day             Int            @default(0)
+  scheduledTime   DateTime       @db.Time(6)
+  prime           Boolean        @default(false)
+  active          Boolean        @default(true)
+  BoardingPoints  BoardingPoints @relation(fields: [boardingPointId], references: [id])
+  Services        Services       @relation(fields: [serviceId], references: [id])
+
+  @@id([boardingPointId, serviceId])
+  @@index([serviceId])
+}
+
+model ServiceDroppingPoints {
+  droppingPointId Int
+  serviceId       Int
+  day             Int            @default(0)
+  scheduledTime   DateTime       @db.Time(6)
+  prime           Boolean        @default(false)
+  active          Boolean        @default(true)
+  DroppingPoints  DroppingPoints @relation(fields: [droppingPointId], references: [id])
+  Services        Services       @relation(fields: [serviceId], references: [id])
+
+  @@id([droppingPointId, serviceId])
+}
+
+model Services {
+  id                                        Int                     @id @default(autoincrement())
+  serviceNumber                             String                  @unique
+  name                                      String
+  sourceId                                  Int
+  destinationId                             Int
+  vehicleTypeId                             Int                     @default(1)
+  active                                    Boolean                 @default(true)
+  basicCost                                 Int?
+  srpPosition                               Int?
+  referenceId                               Int?                    @unique
+  blockedCaptainSeats                       Int                     @default(0)
+  snacks                                    Boolean                 @default(true)
+  MarketServiceMapping                      MarketServiceMapping[]
+  ReservedTickets                           ReservedTickets[]
+  ServiceAnalyticsData                      ServiceAnalyticsData[]
+  ServiceBoardingPoints                     ServiceBoardingPoints[]
+  ServiceDroppingPoints                     ServiceDroppingPoints[]
+  ServiceMidPoints                          ServiceMidPoints[]
+  Stations_Services_destinationIdToStations Stations                @relation("Services_destinationIdToStations", fields: [destinationId], references: [id])
+  Stations_Services_sourceIdToStations      Stations                @relation("Services_sourceIdToStations", fields: [sourceId], references: [id])
+  VehicleTypes                              VehicleTypes            @relation(fields: [vehicleTypeId], references: [id])
+  TripDiscounts                             TripDiscounts[]
+  Trips                                     Trips[]
+  ViaStationRoutes                          ViaStationRoutes?
+  AmenitiesToServices                       AmenitiesToServices[]
+}
+
+model Stations {
+  id                                                      Int               @id @default(autoincrement())
+  name                                                    String
+  state                                                   String
+  shortName                                               String            @unique
+  active                                                  Boolean           @default(true)
+  famousCity                                              Boolean           @default(true)
+  BoardingPoints                                          BoardingPoints[]
+  DroppingPoints                                          DroppingPoints[]
+  MidPoints_MidPoints_destinationIdToStations             MidPoints[]       @relation("MidPoints_destinationIdToStations")
+  MidPoints_MidPoints_sourceIdToStations                  MidPoints[]       @relation("MidPoints_sourceIdToStations")
+  Routes_Routes_destinationIdToStations                   Routes[]          @relation("Routes_destinationIdToStations")
+  Routes_Routes_sourceIdToStations                        Routes[]          @relation("Routes_sourceIdToStations")
+  Services_Services_destinationIdToStations               Services[]        @relation("Services_destinationIdToStations")
+  Services_Services_sourceIdToStations                    Services[]        @relation("Services_sourceIdToStations")
+  Tasks                                                   Tasks[]
+  Trips_Trips_destinationIdToStations                     Trips[]           @relation("Trips_destinationIdToStations")
+  Trips_Trips_sourceIdToStations                          Trips[]           @relation("Trips_sourceIdToStations")
+  User                                                    User[]
+  ViaStationTrips_ViaStationTrips_destinationIdToStations ViaStationTrips[] @relation("ViaStationTrips_destinationIdToStations")
+  ViaStationTrips_ViaStationTrips_sourceIdToStations      ViaStationTrips[] @relation("ViaStationTrips_sourceIdToStations")
+  StationsToUser                                          StationsToUser[]
+}
+
+model TempTickets {
+  id              Int      @id @default(autoincrement())
+  transactionJSON Json
+  createdAt       DateTime @default(now())
+  active          Boolean  @default(true)
+  createdById     Int?
+  User            User?    @relation(fields: [createdById], references: [id])
+}
+
+model TicketTransactions {
+  id                                              Int                                               @id @default(autoincrement())
+  transactionType                                 TicketTransactionTypes                            @default(Booked)
+  financialTransactionType                        FinanceTransactionTypes                           @default(Credit)
+  ticketId                                        Int
+  amount                                          Decimal
+  collectAmount                                   Decimal                                           @default(0)
+  tax                                             Decimal
+  discount                                        Decimal
+  commission                                      Decimal
+  createdAt                                       DateTime                                          @default(now())
+  createdById                                     Int?
+  greenCoinsTransactionId                         Int?
+  freshPassTransactionsId                         Int?
+  paymentId                                       Int?
+  active                                          Boolean                                           @default(true)
+  sync                                            Boolean                                           @default(false)
+  freshCardTransactionId                          BigInt?
+  hashId                                          String?
+  invoiceCreated                                  Boolean?
+  invoiceSeries                                   String?                                           @default("")
+  couponCode                                      String?                                           @default("")
+  couponId                                        String?                                           @default("")
+  FreshCardTicketTransactions                     FreshCardTicketTransactions[]
+  FreshPassTicketTransactions                     FreshPassTicketTransactions?
+  GreenCoinTransactions                           GreenCoinTransactions[]
+  TicketCancellationDetails                       TicketCancellationDetails[]
+  User                                            User?                                             @relation(fields: [createdById], references: [id])
+  PaymentGatewayTransactions                      PaymentGatewayTransactions?                       @relation(fields: [paymentId], references: [id])
+  ReservedTickets                                 ReservedTickets                                   @relation(fields: [ticketId], references: [id])
+  AgentCommissionTransactionsToTicketTransactions AgentCommissionTransactionsToTicketTransactions[]
+  ReservedTicketSeatsToTicketTransactions         ReservedTicketSeatsToTicketTransactions[]
+}
+
+model TripBoardingPoints {
+  boardingPointId                Int
+  tripId                         Int
+  scheduledTime                  DateTime
+  currentTime                    DateTime
+  actualTime                     DateTime?
+  prime                          Boolean                          @default(false)
+  active                         Boolean                          @default(true)
+  actualDepartureTime            DateTime?                        @db.Timestamp(6)
+  TicketBoardingHistory          TicketBoardingHistory[]
+  TripBoardingPointTimingUpdates TripBoardingPointTimingUpdates[]
+  BoardingPoints                 BoardingPoints                   @relation(fields: [boardingPointId], references: [id])
+  Trips                          Trips                            @relation(fields: [tripId], references: [id])
+
+  @@id([boardingPointId, tripId])
+  @@index([tripId])
+}
+
+model TripBreakdowns {
+  tripId                 Int
+  reasonId               Int?
+  createdAt              DateTime                 @default(now())
+  createdById            Int
+  active                 Boolean                  @default(true)
+  id                     Int                      @id @default(autoincrement())
+  revokedAt              DateTime?
+  vehicleId              Int?
+  resolutionTime         Int?
+  comment                String?
+  faultId                Int?
+  TripBreakdownQuestions TripBreakdownQuestions[]
+  User                   User                     @relation(fields: [createdById], references: [id])
+  CancellationReasons    CancellationReasons?     @relation(fields: [faultId], references: [id])
+  BreakdownReasons       BreakdownReasons?        @relation(fields: [reasonId], references: [id])
+  Trips                  Trips                    @relation(fields: [tripId], references: [id])
+  Vehicles               Vehicles?                @relation(fields: [vehicleId], references: [id])
+}
+
+model TripCancellations {
+  tripId                                    Int
+  reasonId                                  Int
+  createdAt                                 DateTime             @default(now())
+  createdById                               Int
+  ApprovedById                              Int?
+  active                                    Boolean              @default(true)
+  comment                                   String?
+  breakdownAssignment                       BreakdownAssignment?
+  User_TripCancellations_ApprovedByIdToUser User?                @relation("TripCancellations_ApprovedByIdToUser", fields: [ApprovedById], references: [id])
+  User_TripCancellations_createdByIdToUser  User                 @relation("TripCancellations_createdByIdToUser", fields: [createdById], references: [id])
+  CancellationReasons                       CancellationReasons  @relation(fields: [reasonId], references: [id])
+  Trips                                     Trips                @relation(fields: [tripId], references: [id])
+
+  @@id([tripId, createdAt, reasonId])
+}
+
+model TripDelays {
+  tripId                             Int
+  delayIntervalId                    Int
+  reasonId                           Int
+  createdAt                          DateTime       @default(now())
+  createdById                        Int
+  ApprovedById                       Int?
+  comment                            String
+  active                             Boolean        @default(true)
+  User_TripDelays_ApprovedByIdToUser User?          @relation("TripDelays_ApprovedByIdToUser", fields: [ApprovedById], references: [id])
+  User_TripDelays_createdByIdToUser  User           @relation("TripDelays_createdByIdToUser", fields: [createdById], references: [id])
+  DelayIntervals                     DelayIntervals @relation(fields: [delayIntervalId], references: [id])
+  DelayReasons                       DelayReasons   @relation(fields: [reasonId], references: [id])
+  Trips                              Trips          @relation(fields: [tripId], references: [id])
+
+  @@id([tripId, createdAt, reasonId])
+}
+
+model TripDroppingPoints {
+  droppingPointId                Int
+  tripId                         Int
+  scheduledTime                  DateTime
+  currentTime                    DateTime
+  actualTime                     DateTime?
+  prime                          Boolean                          @default(false)
+  active                         Boolean                          @default(true)
+  actualDepartureTime            DateTime?                        @db.Timestamp(6)
+  TicketDroppingHistory          TicketDroppingHistory[]
+  TripDroppingPointTimingUpdates TripDroppingPointTimingUpdates[]
+  DroppingPoints                 DroppingPoints                   @relation(fields: [droppingPointId], references: [id])
+  Trips                          Trips                            @relation(fields: [tripId], references: [id])
+
+  @@id([droppingPointId, tripId])
+  @@index([tripId])
+}
+
+model TripQuestions {
+  tripId      Int
+  questionId  Int
+  answer      String
+  createdById Int
+  createdAt   DateTime  @default(now())
+  User        User      @relation(fields: [createdById], references: [id])
+  Questions   Questions @relation(fields: [questionId], references: [id])
+  Trips       Trips     @relation(fields: [tripId], references: [id])
+
+  @@unique([tripId, questionId])
+}
+
+model TripReassigns {
+  id                                                 Int                            @id @default(autoincrement())
+  tripId                                             Int
+  createdAt                                          DateTime                       @default(now())
+  createdById                                        Int
+  approvedById                                       Int?
+  vehicleId                                          Int
+  previousVehicleId                                  Int
+  active                                             Boolean                        @default(true)
+  captainId                                          Int?
+  coCaptainId                                        Int?
+  prevCaptainId                                      Int?
+  prevCoCaptainId                                    Int?
+  User_TripReassigns_approvedByIdToUser              User?                          @relation("TripReassigns_approvedByIdToUser", fields: [approvedById], references: [id])
+  User_TripReassigns_captainIdToUser                 User?                          @relation("TripReassigns_captainIdToUser", fields: [captainId], references: [id])
+  User_TripReassigns_coCaptainIdToUser               User?                          @relation("TripReassigns_coCaptainIdToUser", fields: [coCaptainId], references: [id])
+  User_TripReassigns_createdByIdToUser               User                           @relation("TripReassigns_createdByIdToUser", fields: [createdById], references: [id])
+  User_TripReassigns_prevCaptainIdToUser             User?                          @relation("TripReassigns_prevCaptainIdToUser", fields: [prevCaptainId], references: [id])
+  User_TripReassigns_prevCoCaptainIdToUser           User?                          @relation("TripReassigns_prevCoCaptainIdToUser", fields: [prevCoCaptainId], references: [id])
+  Vehicles_TripReassigns_previousVehicleIdToVehicles Vehicles                       @relation("TripReassigns_previousVehicleIdToVehicles", fields: [previousVehicleId], references: [id])
+  Trips                                              Trips                          @relation(fields: [tripId], references: [id])
+  Vehicles_TripReassigns_vehicleIdToVehicles         Vehicles                       @relation("TripReassigns_vehicleIdToVehicles", fields: [vehicleId], references: [id])
+  tripReassignCaptains                               tripReassignCaptains[]
+  tripReassignPreviousCaptains                       tripReassignPreviousCaptains[]
+}
+
+model TripSeats {
+  id                 Int                @id @default(autoincrement())
+  tripId             Int
+  seatId             Int
+  fare               Decimal
+  tax                Decimal
+  available          Boolean            @default(true)
+  availablityStatus  AvailabilityStatus @default(A)
+  discount           Decimal
+  createdById        Int
+  createdAt          DateTime           @default(now())
+  availableAt        DateTime?
+  active             Boolean            @default(true)
+  hasStaticFare      Boolean            @default(false)
+  boardAvailFrom     DateTime?          @db.Timestamp(6)
+  boardAvailTill     DateTime?          @db.Timestamp(6)
+  destinationId      Int                @default(0)
+  sourceId           Int                @default(0)
+  broken             Boolean            @default(false)
+  fareAdjustment     Decimal            @default(0)
+  isSeatDifferential Boolean            @default(false)
+  seatDifferential   Decimal            @default(0)
+  User               User               @relation(fields: [createdById], references: [id])
+  Seats              Seats              @relation(fields: [seatId], references: [id])
+  Trips              Trips              @relation(fields: [tripId], references: [id])
+
+  @@unique([tripId, seatId, sourceId, destinationId])
+  @@index([tripId, sourceId, destinationId])
+}
+
+model Trips {
+  id                                     Int                              @id @default(autoincrement())
+  serviceId                              Int
+  journeyDate                            DateTime                         @db.Date
+  sourceId                               Int
+  destinationId                          Int
+  createdById                            Int                              @default(1)
+  createdAt                              DateTime                         @default(now())
+  vehicleId                              Int?
+  active                                 Boolean                          @default(true)
+  vehicleTypeId                          Int                              @default(1)
+  startedAt                              DateTime?
+  endedAt                                DateTime?
+  kilometers                             Int                              @default(300)
+  captainId                              Int?
+  notified                               Boolean                          @default(false)
+  fareAdjustment                         Decimal                          @default(0)
+  inactiveReasonId                       Int?
+  fareClassification                     FareClassifications?
+  pricingModel                           PricingModels?
+  asp                                    Int?
+  basicCost                              Int?
+  totalOccupency                         Int?
+  totalRevenue                           Int?
+  srpPosition                            Int                              @default(0)
+  redbusPrimeTime                        DateTime?
+  staticBaseFare                         Int                              @default(0)
+  fleetxId                               String?
+  serviceNumber                          String?
+  AlcoholTestResult                      AlcoholTestResult[]
+  PromiseTransactionRequests             PromiseTransactionRequests[]
+  RescheduleTicketSeats                  RescheduleTicketSeats[]
+  ReservedTickets                        ReservedTickets[]
+  TripBoardingPointTimingUpdates         TripBoardingPointTimingUpdates[]
+  TripBoardingPoints                     TripBoardingPoints[]
+  TripBoardingPointsDelay                TripBoardingPointsDelay[]
+  TripBreakdowns                         TripBreakdowns[]
+  TripCancellations                      TripCancellations[]
+  TripDelays                             TripDelays[]
+  TripDiscountHistory                    TripDiscountHistory[]
+  TripDroppingPointTimingUpdates         TripDroppingPointTimingUpdates[]
+  TripDroppingPoints                     TripDroppingPoints[]
+  TripDroppingPointsDelay                TripDroppingPointsDelay[]
+  TripMidPoints                          TripMidPoints[]
+  TripProjectedRevenue                   TripProjectedRevenue[]
+  TripQuestions                          TripQuestions[]
+  TripReassigns                          TripReassigns[]
+  TripSeatAvailabilityStatus             TripSeatAvailabilityStatus[]
+  TripSeatBasePrice                      TripSeatBasePrice[]
+  TripSeats                              TripSeats[]
+  TripSeatsLowerLimits                   TripSeatsLowerLimits[]
+  TripUserAttributes                     TripUserAttributes[]
+  User_Trips_captainIdToUser             User?                            @relation("Trips_captainIdToUser", fields: [captainId], references: [id])
+  User_Trips_createdByIdToUser           User                             @relation("Trips_createdByIdToUser", fields: [createdById], references: [id])
+  Stations_Trips_destinationIdToStations Stations                         @relation("Trips_destinationIdToStations", fields: [destinationId], references: [id])
+  CancellationReasons                    CancellationReasons?             @relation(fields: [inactiveReasonId], references: [id])
+  Services                               Services                         @relation(fields: [serviceId], references: [id])
+  Stations_Trips_sourceIdToStations      Stations                         @relation("Trips_sourceIdToStations", fields: [sourceId], references: [id])
+  Vehicles                               Vehicles?                        @relation(fields: [vehicleId], references: [id])
+  VehicleTypes                           VehicleTypes                     @relation(fields: [vehicleTypeId], references: [id])
+  TripsAnalyticsData                     TripsAnalyticsData[]
+  VehicleObservations                    VehicleObservations?
+  ViaStationTrips                        ViaStationTrips[]
+  AmenitiesToTrips                       AmenitiesToTrips[]
+  tripCaptains                           tripCaptains[]
+  alcoholInitiateHistory                 alcoholInitiateHistory[]
+
+  @@unique([serviceId, journeyDate])
+}
+
+model UserAgentDetails {
+  uuid                                      Int                @unique
+  apiEnabled                                Boolean            @default(false)
+  apiPassword                               String?
+  commissiontype                            TransactionTypes   @default(Percent)
+  commission                                Decimal            @default(12.0)
+  currentBalance                            Decimal            @default(0.0)
+  totalRecharge                             Decimal            @default(0.0)
+  loaderFee                                 Decimal            @default(0)
+  markup                                    Decimal            @default(0)
+  isDistributor                             Boolean            @default(false)
+  distributorId                             Int?
+  active                                    Boolean            @default(true)
+  apiUsername                               String?
+  specialFares                              Decimal            @default(0)
+  salesPersonId                             Int?
+  aadhar                                    String             @default("")
+  aadharPhoto                               String             @default("")
+  panNumber                                 String             @default("")
+  panPhoto                                  String             @default("")
+  UserAgentDetails                          UserAgentDetails?  @relation("UserAgentDetailsToUserAgentDetails", fields: [distributorId], references: [uuid])
+  other_UserAgentDetails                    UserAgentDetails[] @relation("UserAgentDetailsToUserAgentDetails")
+  User_UserAgentDetails_salesPersonIdToUser User?              @relation("UserAgentDetails_salesPersonIdToUser", fields: [salesPersonId], references: [id])
+  User                                      User               @relation(fields: [uuid], references: [id])
+}
+
+model UserMetaData {
+  uuid          Int
+  metaFieldId   Int
+  data          String?
+  UserMetaField UserMetaField @relation(fields: [metaFieldId], references: [id])
+  User          User          @relation(fields: [uuid], references: [id])
+
+  @@id([uuid, metaFieldId])
+}
+
+model UserMetaField {
+  id           Int            @id @default(autoincrement())
+  name         String
+  UserMetaData UserMetaData[]
+}
+
+model UserPrivilegeCategories {
+  id                         Int                          @id @default(autoincrement())
+  displayName                String
+  categoryBit                Int                          @default(0)
+  iconsLucide                String                       @default("")
+  url                        String                       @default("")
+  template                   String                       @default("")
+  showInDrawer               Boolean                      @default(false)
+  UserPrivilegeSubCategories UserPrivilegeSubCategories[]
+  UserPrivileges             UserPrivileges[]
+  UserSpecificPrivileges     UserSpecificPrivileges[]
+}
+
+model UserPrivilegeSubCategories {
+  id                      Int                     @id @default(autoincrement())
+  displayName             String
+  userPrivilegeCategoryId Int
+  subCategoryBit          Int                     @default(0)
+  url                     String                  @default("")
+  UserPrivilegeCategories UserPrivilegeCategories @relation(fields: [userPrivilegeCategoryId], references: [id])
+}
+
+model UserPrivileges {
+  id                      Int                     @id @default(autoincrement())
+  userPrivilegeCateroryId Int
+  userTypeId              Int                     @default(1)
+  privilegeBit            Int                     @default(0)
+  UserPrivilegeCategories UserPrivilegeCategories @relation(fields: [userPrivilegeCateroryId], references: [id])
+  UserTypes               UserTypes               @relation(fields: [userTypeId], references: [id])
+}
+
+model UserSpecificPrivileges {
+  id                      Int                     @id @default(autoincrement())
+  userPrivilegeCateroryId Int
+  uuid                    Int
+  privilegeBit            Int                     @default(0)
+  grantBits               Int                     @default(0)
+  revokeBits              Int                     @default(0)
+  UserPrivilegeCategories UserPrivilegeCategories @relation(fields: [userPrivilegeCateroryId], references: [id])
+  User                    User                    @relation(fields: [uuid], references: [id])
+}
+
+model UserTokens {
+  userId       Int
+  refreshToken String
+  createdAt    DateTime @default(now())
+  deviceId     String   @default("FreshBus")
+  User         User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, deviceId])
+}
+
+model UserTypes {
+  id                    Int                     @id @default(autoincrement())
+  name                  String
+  ManageUserPermissions ManageUserPermissions[]
+  QuestionCategories    QuestionCategories[]
+  User                  User[]
+  UserPrivileges        UserPrivileges[]
+}
+
+model VehicleMetaData {
+  vehicleId         Int
+  metaFieldId       Int
+  data              String?
+  VehicleMetaFields VehicleMetaFields @relation(fields: [metaFieldId], references: [id])
+  Vehicles          Vehicles          @relation(fields: [vehicleId], references: [id])
+
+  @@id([vehicleId, metaFieldId])
+}
+
+model VehicleMetaFields {
+  id              Int               @id @default(autoincrement())
+  name            String
+  VehicleMetaData VehicleMetaData[]
+}
+
+model VehicleTypes {
+  id                   Int             @id @default(autoincrement())
+  name                 String
+  dividersX            Int[]
+  dividersY            Int[]
+  dividerXDescriptions String[]
+  dividerYDescriptions String[]
+  rows                 Int             @default(0)
+  columns              Int             @default(0)
+  active               Boolean         @default(true)
+  shortName            String?
+  busLength            Decimal         @default(13.5)
+  busType              VehicleCategory @default(SEATER)
+  dividers             Json?
+  Seats                Seats[]
+  Services             Services[]
+  Trips                Trips[]
+  Vehicles             Vehicles[]
+}
+
+model Vehicles {
+  id                                                      Int                            @id @default(autoincrement())
+  vehicleNumber                                           String                         @unique
+  vehicleTypeId                                           Int                            @default(1)
+  active                                                  Boolean                        @default(true)
+  alcobrakeId                                             String                         @default("")
+  imei                                                    String                         @default("")
+  byteBeamId                                              String                         @default("")
+  depotsId                                                Int?
+  fitnessCertificateValidTo                               DateTime?                      @db.Date
+  insuranceCertificateValidTo                             DateTime?                      @db.Date
+  vahanAITFrom                                            DateTime?                      @db.Date
+  vahanAITTo                                              DateTime?                      @db.Date
+  vahanAuthorizationValidFrom                             DateTime?                      @db.Date
+  vahanAuthorizationValidTo                               DateTime?                      @db.Date
+  vahanPermitNumber                                       String                         @default("")
+  stateAITPermitFrom                                      DateTime?                      @db.Date
+  stateAITPermitNumber                                    String?
+  stateAITPermitTo                                        DateTime?                      @db.Date
+  busLength                                               Decimal                        @default(13.5)
+  stateAuthorizationValidTo                               DateTime?                      @db.Date
+  devicesAttached                                         String[]
+  oem                                                     String?
+  alcobrakeDeviceStatus                                   Boolean                        @default(true)
+  AlcobrakeDeviceStatusLog                                AlcobrakeDeviceStatusLog[]
+  AlcoholTestResult                                       AlcoholTestResult[]
+  BreakPadReplacements                                    BreakPadReplacements[]
+  BreakpadFitment                                         BreakpadFitment[]
+  Tasks                                                   Tasks[]
+  TripBreakdowns                                          TripBreakdowns[]
+  TripReassigns_TripReassigns_previousVehicleIdToVehicles TripReassigns[]                @relation("TripReassigns_previousVehicleIdToVehicles")
+  TripReassigns_TripReassigns_vehicleIdToVehicles         TripReassigns[]                @relation("TripReassigns_vehicleIdToVehicles")
+  Trips                                                   Trips[]
+  Tyres                                                   Tyres[]
+  VehicleComponentObservations                            VehicleComponentObservations[]
+  VehicleLiveComponents                                   VehicleLiveComponents[]
+  VehicleLiveComponentsHistory                            VehicleLiveComponentsHistory[]
+  VehicleMetaData                                         VehicleMetaData[]
+  VehicleObservations                                     VehicleObservations[]
+  VehicleQuestions                                        VehicleQuestions[]
+  Depots                                                  Depots?                        @relation(fields: [depotsId], references: [id])
+  VehicleTypes                                            VehicleTypes                   @relation(fields: [vehicleTypeId], references: [id])
+  alcoholInitiateHistory                                  alcoholInitiateHistory[]
+}
+
+model AlcobrakeDeviceStatusLog {
+  id                Int       @id @default(autoincrement())
+  createdAt         DateTime  @default(now())
+  createdById       Int
+  vehicleId         Int?
+  resolveEnableDate DateTime?
+  disableReason     String
+  User              User      @relation(fields: [createdById], references: [id])
+  Vehicles          Vehicles? @relation(fields: [vehicleId], references: [id])
+}
+
+model AlcoholTestResult {
+  id            Int      @id @default(autoincrement())
+  alcobrakeId   String
+  vehicleNumber String
+  tripId        Int
+  testType      String
+  eventType     Int
+  bacValue      Int
+  captainId     Int?
+  createdAt     DateTime @default(now())
+  testImage     String?
+  User          User?    @relation(fields: [captainId], references: [id])
+  Trips         Trips    @relation(fields: [tripId], references: [id])
+  Vehicles      Vehicles @relation(fields: [vehicleNumber], references: [vehicleNumber])
+}
+
+model ApprovalStages {
+  id                          Int                           @id @default(autoincrement())
+  teamName                    String
+  order                       Int
+  userTypeId                  Int?
+  PromiseTransactionApprovals PromiseTransactionApprovals[]
+  PromiseTransactionRequests  PromiseTransactionRequests[]
+}
+
+model BoardStatusChangeReasons {
+  id                 Int                  @id @default(autoincrement())
+  name               String
+  active             Boolean              @default(true)
+  BoardStatusHistory BoardStatusHistory[]
+}
+
+model BoardStatusHistory {
+  id                         Int                       @id @default(autoincrement())
+  reservedTicketSeatId       Int
+  boardStatus                BoardStatus
+  createdAt                  DateTime                  @default(now())
+  boardStatusChangeReasonsId Int?
+  BoardStatusChangeReasons   BoardStatusChangeReasons? @relation(fields: [boardStatusChangeReasonsId], references: [id])
+  ReservedTicketSeats        ReservedTicketSeats       @relation(fields: [reservedTicketSeatId], references: [id])
+}
+
+model BookingAdAttribution {
+  id                                                                 Int              @id @default(autoincrement())
+  bookingId                                                          Int              @unique
+  tempTicketId                                                       Int?             @unique
+  customerId                                                         Int?
+  conversionTs                                                       DateTime
+  paidAfterCoupon                                                    Decimal          @default(0)
+  currency                                                           String           @default("INR")
+  trafficClass                                                       String
+  platform                                                           String
+  attributionStatus                                                  String
+  adIdentifiersFound                                                 Boolean          @default(false)
+  attributionMethod                                                  String           @default("last_non_direct_click_7d")
+  lookbackDays                                                       Int              @default(7)
+  confidence                                                         String           @default("medium")
+  attributionSessionId                                               String?
+  capturedAt                                                         DateTime?
+  referrerUrl                                                        String?
+  landingPath                                                        String?
+  utmSource                                                          String?
+  utmMedium                                                          String?
+  utmCampaign                                                        String?
+  utmTerm                                                            String?
+  utmContent                                                         String?
+  gclid                                                              String?
+  fbclid                                                             String?
+  wbraid                                                             String?
+  gbraid                                                             String?
+  campaignId                                                         String?
+  adsetId                                                            String?
+  adId                                                               String?
+  campaignName                                                       String?
+  adsetName                                                          String?
+  adName                                                             String?
+  missingFields                                                      Json?
+  sourceStationId                                                    Int?
+  destinationStationId                                               Int?
+  tripId                                                             Int?
+  journeyDate                                                        DateTime?        @db.Date
+  deviceType                                                         String?
+  attributedAt                                                       DateTime         @default(now())
+  createdAt                                                          DateTime         @default(now())
+  updatedAt                                                          DateTime
+  attributionSchemaVersion                                           Int?
+  latestTouchJson                                                    Json?
+  touchHistoryJson                                                   Json?
+  ReservedTickets_BookingAdAttribution_bookingIdToReservedTickets    ReservedTickets  @relation("BookingAdAttribution_bookingIdToReservedTickets", fields: [bookingId], references: [id])
+  Customers                                                          Customers?       @relation(fields: [customerId], references: [id])
+  ReservedTickets_BookingAdAttribution_tempTicketIdToReservedTickets ReservedTickets? @relation("BookingAdAttribution_tempTicketIdToReservedTickets", fields: [tempTicketId], references: [tempTicketId])
+
+  @@index([adId, conversionTs])
+  @@index([conversionTs])
+  @@index([platform, conversionTs])
+  @@index([utmCampaign, conversionTs])
+}
+
+model BreakPadReplacements {
+  id          Int               @id @default(autoincrement())
+  vehicleId   Int
+  mileage     Int               @default(0)
+  createdAt   DateTime          @default(now())
+  createdById Int
+  position    BreakpadPosition?
+  User        User              @relation(fields: [createdById], references: [id])
+  Vehicles    Vehicles          @relation(fields: [vehicleId], references: [id])
+}
+
+model BreakpadFitment {
+  id        Int               @id @default(autoincrement())
+  brand     String
+  vehicleId Int?
+  mileage   Int               @default(0)
+  position  BreakpadPosition?
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @default(now())
+  active    Boolean           @default(true)
+  Vehicles  Vehicles?         @relation(fields: [vehicleId], references: [id])
+
+  @@unique([vehicleId, position])
+}
+
+model BulkBookings {
+  id          Int       @id @default(autoincrement())
+  boarding    String
+  dropping    String
+  journeyDate DateTime  @db.Date
+  seats       Int
+  name        String
+  mobile      String
+  returnTrip  Boolean   @default(false)
+  returnDate  DateTime? @db.Date
+  reference   String    @unique @default("FRE")
+}
+
+model CaptainIncentives {
+  id                     Int                     @id @default(autoincrement())
+  captainId              Int
+  type                   CaptainIncentiveType
+  ticketId               Int?
+  createdAt              DateTime
+  financeTransactionType FinanceTransactionTypes @default(Credit)
+  amount                 Decimal
+  comment                String
+  active                 Boolean                 @default(true)
+  User                   User                    @relation(fields: [captainId], references: [id])
+  ReservedTickets        ReservedTickets?        @relation(fields: [ticketId], references: [id])
+
+  @@unique([ticketId, captainId, financeTransactionType])
+}
+
+model CompetitorSeatPricing {
+  id                  Int                @id @default(autoincrement())
+  serviceCompetitorId Int
+  seatType            SeatTypes
+  value               Int
+  ServiceCompetitors  ServiceCompetitors @relation(fields: [serviceCompetitorId], references: [id])
+}
+
+model Competitors {
+  id                 Int                  @id
+  name               String
+  MarketServices     MarketServices[]
+  ServiceCompetitors ServiceCompetitors[]
+}
+
+model CouponsList {
+  id              Int      @id @default(autoincrement())
+  couponId        String   @unique
+  couponCode      String
+  expiryAt        DateTime
+  minAmount       Int?
+  maxAmount       Int?
+  uptoAmount      Int?
+  calculationRule String
+  offValue        Int
+  couponType      String
+  udfvalues       String[] @default([])
+}
+
+model CustomerDiscounts {
+  id                                                            Int               @id @default(autoincrement())
+  customerId                                                    Int
+  ticketId                                                      Int?
+  sourceId                                                      Int?
+  destinationId                                                 Int?
+  validTill                                                     DateTime?
+  used                                                          Boolean           @default(false)
+  discountId                                                    Int
+  createdAt                                                     DateTime          @default(now())
+  discountAmount                                                Int               @default(0)
+  active                                                        Boolean           @default(true)
+  Customers                                                     Customers         @relation(fields: [customerId], references: [id])
+  Discounts                                                     Discounts         @relation(fields: [discountId], references: [id])
+  ReservedTickets_CustomerDiscounts_ticketIdToReservedTickets   ReservedTickets?  @relation("CustomerDiscounts_ticketIdToReservedTickets", fields: [ticketId], references: [id])
+  ReservedTickets_ReservedTickets_discountIdToCustomerDiscounts ReservedTickets[] @relation("ReservedTickets_discountIdToCustomerDiscounts")
+}
+
+model CustomerMobileTokens {
+  customerId    Int
+  firebaseToken String
+  accessToken   String
+  createdAt     DateTime  @default(now())
+  imei          String
+  prd           String
+  apiVersion    String
+  appVersion    String
+  Customers     Customers @relation(fields: [customerId], references: [id])
+
+  @@unique([customerId, firebaseToken])
+}
+
+model CustomerRatings {
+  ticketId          Int             @unique
+  createdAt         DateTime
+  review            String          @default("")
+  replyToReview     String          @default("")
+  ratingUpdate      Boolean         @default(false)
+  rating            Int
+  cleanliness       Boolean?
+  punctuality       Boolean?
+  staffBehaviour    Boolean?
+  overallExperience Boolean?
+  liveTrackings     Boolean?
+  ac                Boolean?
+  seatComfort       Boolean?
+  restStopHygine    Boolean?
+  driving           Boolean?
+  ccallTime         DateTime?
+  cccaller          String          @default("")
+  cctalkTime        Int             @default(0)
+  ReservedTickets   ReservedTickets @relation(fields: [ticketId], references: [id])
+}
+
+model CustomerRewards {
+  id                          Int                          @id @default(autoincrement())
+  customerId                  Int
+  coinId                      Int?
+  freshcardId                 Int?
+  comment                     String
+  rewardType                  String
+  viewed                      Boolean                      @default(false)
+  active                      Boolean                      @default(true)
+  createdAt                   DateTime                     @default(now())
+  GreenCoinTransactions       GreenCoinTransactions?       @relation(fields: [coinId], references: [id])
+  Customers                   Customers                    @relation(fields: [customerId], references: [id])
+  FreshCardTicketTransactions FreshCardTicketTransactions? @relation(fields: [freshcardId], references: [id])
+}
+
+model CustomerUdf {
+  id         Int       @id @default(autoincrement())
+  udf        String
+  udfvalue   String
+  customerId Int
+  expiryAt   DateTime? @db.Timestamp(6)
+  count      Int       @default(0)
+  Customers  Customers @relation(fields: [customerId], references: [id])
+}
+
+model DepotInsurances {
+  id              Int      @id @default(autoincrement())
+  depotId         Int
+  name            String
+  company         String
+  insuranceNumber String   @unique
+  validFrom       DateTime
+  validTo         DateTime
+  premium         Decimal
+  tax             Decimal
+  Coverage        String
+  active          Boolean  @default(true)
+  Depots          Depots   @relation(fields: [depotId], references: [id])
+}
+
+model Depots {
+  id              Int               @id @default(autoincrement())
+  name            String
+  address         String
+  active          Boolean           @default(true)
+  DepotInsurances DepotInsurances[]
+  User            User[]
+  Vehicles        Vehicles[]
+}
+
+model DiscountStrategies {
+  id                                         Int                   @id @default(autoincrement())
+  name                                       String
+  description                                String?
+  discountStrategyType                       DiscountStategyType
+  discountType                               DiscountType
+  discount                                   Decimal
+  uptoAmount                                 Float?
+  minSeatPrice                               Float?
+  maxSeatPrice                               Float?
+  daysOfWeek                                 Int[]
+  minOccupancy                               Float?                @default(0)
+  maxOccupancy                               Float?                @default(100)
+  dealTimingType                             DealTimingType
+  hours                                      Float?                @default(0)
+  createdAt                                  DateTime              @default(now())
+  modifiedAt                                 DateTime              @default(now())
+  createdById                                Int
+  modifiedById                               Int
+  User_DiscountStrategies_createdByIdToUser  User                  @relation("DiscountStrategies_createdByIdToUser", fields: [createdById], references: [id])
+  User_DiscountStrategies_modifiedByIdToUser User                  @relation("DiscountStrategies_modifiedByIdToUser", fields: [modifiedById], references: [id])
+  TripDiscountHistory                        TripDiscountHistory[]
+  TripDiscounts                              TripDiscounts[]
+}
+
+model Discounts {
+  id                 Int                 @id @default(autoincrement())
+  routeId            Int?
+  bookInDays         Int?
+  bookForInDays      Int?
+  flatFare           Int
+  maxDiscount        Int
+  createdAt          DateTime            @default(now())
+  active             Boolean             @default(true)
+  discountType       DiscountTypes
+  discountPercentage Decimal
+  CustomerDiscounts  CustomerDiscounts[]
+  Routes             Routes?             @relation(fields: [routeId], references: [id])
+}
+
+model EmployeeCoupons {
+  id                  Int                   @id @default(autoincrement())
+  employeeId          Int
+  couponCode          String                @unique @db.VarChar(50)
+  validFrom           DateTime              @db.Date
+  validTo             DateTime              @db.Date
+  excludedDates       DateTime[]            @db.Date
+  active              Boolean               @default(true)
+  createdAt           DateTime              @default(now()) @db.Timestamp(6)
+  type                EmployeeCouponsType
+  used                Boolean               @default(false)
+  Employees           Employees             @relation(fields: [employeeId], references: [id])
+  ReservedTicketSeats ReservedTicketSeats[]
+}
+
+model Employees {
+  id              Int               @id @default(autoincrement())
+  employeeCode    String            @unique
+  name            String
+  mobile          String            @unique
+  email           String?           @unique
+  department      String?
+  designation     String?
+  EmployeeCoupons EmployeeCoupons[]
+}
+
+model FareAdjustmentReason {
+  id              Int               @id @default(autoincrement())
+  categoryName    String
+  reason          String
+  active          Boolean           @default(true)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime
+  TripFareHistory TripFareHistory[]
+}
+
+model FreshCard {
+  id                          Int                           @id @default(autoincrement())
+  name                        String
+  fare                        Decimal
+  tickets                     Int
+  discountAmount              Int
+  usage                       Int
+  active                      Boolean
+  expiresInDays               Int
+  FreshCardPurchases          FreshCardPurchases[]
+  FreshCardTicketTransactions FreshCardTicketTransactions[]
+}
+
+model FreshCardOffer {
+  id                  Int                  @id @default(autoincrement())
+  customerId          Int
+  campaignName        String
+  payableAmount       Decimal
+  validUntil          DateTime
+  status              FreshCardOfferStatus @default(Credited)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime
+  freshcardPurchaseId Int?                 @unique
+  Customers           Customers            @relation(fields: [customerId], references: [id])
+  FreshCardPurchases  FreshCardPurchases?  @relation(fields: [freshcardPurchaseId], references: [id])
+
+  @@unique([customerId, campaignName])
+}
+
+model FreshCardPurchases {
+  id                          Int                           @id @default(autoincrement())
+  customerId                  Int
+  amount                      Decimal
+  paymentId                   Int?
+  freshcardId                 Int
+  createdAt                   DateTime                      @default(now())
+  active                      Boolean                       @default(true)
+  campaignName                String                        @default("Normal")
+  platform                    FreshcardPlatformType?
+  source                      FreshcardPurchaseType?
+  offerId                     Int?
+  cancelledAt                 DateTime?
+  idempotencyKey              String?                       @unique
+  paymentLink                 String?
+  sdkPayload                  String?
+  FreshCardOffer              FreshCardOffer?
+  Customers                   Customers                     @relation(fields: [customerId], references: [id])
+  FreshCard                   FreshCard                     @relation(fields: [freshcardId], references: [id])
+  PaymentGatewayTransactions  PaymentGatewayTransactions?   @relation(fields: [paymentId], references: [id])
+  FreshCardTicketTransactions FreshCardTicketTransactions[]
+}
+
+model FreshCardTicketTransactions {
+  id                     Int                       @id @default(autoincrement())
+  freshcardTransactionId Int?
+  financeTransactionType FinanceTransactionTypes   @default(Debit)
+  reference              String?
+  ticketTransactionId    Int?
+  createdAt              DateTime                  @default(now())
+  comment                String?
+  active                 Boolean                   @default(true)
+  freshcardId            Int?
+  customerId             Int
+  transactionTypes       FreshCardTransactionTypes
+  ticketsUsed            Int                       @default(1)
+  availableAt            DateTime?
+  blockId                Int?
+  CustomerRewards        CustomerRewards[]
+  Customers              Customers                 @relation(fields: [customerId], references: [id])
+  FreshCard              FreshCard?                @relation(fields: [freshcardId], references: [id])
+  FreshCardPurchases     FreshCardPurchases?       @relation(fields: [freshcardTransactionId], references: [id])
+  TicketTransactions     TicketTransactions?       @relation(fields: [ticketTransactionId], references: [id])
+}
+
+model GreenCoinsSubDebitTransactions {
+  id                                                                                   Int                   @id @default(autoincrement())
+  debitId                                                                              Int
+  creditId                                                                             Int
+  coinsUsed                                                                            Int
+  transactionCoins                                                                     Int                   @default(0)
+  GreenCoinTransactions_GreenCoinsSubDebitTransactions_creditIdToGreenCoinTransactions GreenCoinTransactions @relation("GreenCoinsSubDebitTransactions_creditIdToGreenCoinTransactions", fields: [creditId], references: [id])
+  GreenCoinTransactions_GreenCoinsSubDebitTransactions_debitIdToGreenCoinTransactions  GreenCoinTransactions @relation("GreenCoinsSubDebitTransactions_debitIdToGreenCoinTransactions", fields: [debitId], references: [id])
+}
+
+model IVRCustomerEvents {
+  id          Int       @id @default(autoincrement())
+  ticketId    Int
+  eventTypeId Int
+  mobile      String
+  createdAt   DateTime  @default(now())
+  send        Boolean   @default(true)
+  IVREvents   IVREvents @relation(fields: [eventTypeId], references: [id])
+}
+
+model IVREvents {
+  id                Int                 @id @default(autoincrement())
+  name              String
+  active            Boolean             @default(true)
+  IVRCustomerEvents IVRCustomerEvents[]
+}
+
+model InstallReferrerEvent {
+  id                    Int        @id @default(autoincrement())
+  referrerUrl           String?
+  referrerClickTsClient BigInt     @default(0)
+  installBeginTsClient  BigInt     @default(0)
+  referrerClickTsServer BigInt     @default(0)
+  installBeginTsServer  BigInt     @default(0)
+  installVersion        String?
+  isGooglePlayInstant   Boolean    @default(false)
+  customerId            Int?
+  createdAt             DateTime   @default(now())
+  updatedAt             DateTime
+  utmCampaign           String?
+  utmMedium             String?
+  utmSource             String?
+  Customers             Customers? @relation(fields: [customerId], references: [id])
+}
+
+model LookToBooks {
+  tripId       Int?
+  serviceId    Int
+  journeyDate  DateTime     @db.Date
+  mainCategory MainCategory
+  subCategory  SubCategory
+  visitType    VisitTypes
+  visits       Int          @default(0)
+  bookedDate   DateTime     @db.Date
+  bookedHour   Int
+
+  @@unique([serviceId, journeyDate, mainCategory, subCategory, visitType, bookedDate, bookedHour])
+}
+
+model MaintenanceCategories {
+  id        Int         @id @default(autoincrement())
+  name      String
+  active    Boolean     @default(true)
+  Questions Questions[]
+}
+
+model MarketServiceMapping {
+  id              Int            @id @default(autoincrement())
+  marketServiceId Int
+  serviceId       Int
+  createdAt       DateTime       @default(now())
+  MarketServices  MarketServices @relation(fields: [marketServiceId], references: [id])
+  Services        Services       @relation(fields: [serviceId], references: [id])
+
+  @@unique([serviceId, marketServiceId])
+  @@index([serviceId])
+}
+
+model MarketServices {
+  id                   Int                    @id @default(autoincrement())
+  competitorId         Int
+  sourceId             Int
+  destinationId        Int
+  serviceName          String
+  serviceStartTime     DateTime               @db.Time(6)
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @default(now())
+  serviceId            Int[]
+  MarketServiceMapping MarketServiceMapping[]
+  Competitors          Competitors            @relation(fields: [competitorId], references: [id])
+
+  @@index([sourceId, destinationId])
+}
+
+model MarketingCampaigns {
+  id        BigInt   @id @default(autoincrement())
+  name      String   @unique
+  limit     Int
+  createdAt DateTime @default(now())
+  usage     Int      @default(0)
+  expiryAt  DateTime @default(now())
+}
+
+model MidPoints {
+  id                                         Int                @id @default(autoincrement())
+  name                                       String
+  latitude                                   Float
+  longitude                                  Float
+  landmark                                   String
+  locationURL                                String
+  locationURL360                             String
+  active                                     Boolean            @default(true)
+  destinationId                              Int
+  sourceId                                   Int
+  isDepot                                    Boolean            @default(false)
+  waitTime                                   Int?
+  Stations_MidPoints_destinationIdToStations Stations           @relation("MidPoints_destinationIdToStations", fields: [destinationId], references: [id])
+  Stations_MidPoints_sourceIdToStations      Stations           @relation("MidPoints_sourceIdToStations", fields: [sourceId], references: [id])
+  ServiceMidPoints                           ServiceMidPoints[]
+  TripMidPoints                              TripMidPoints[]
+}
+
+model PastTripSeatFareHistory {
+  id           Int            @id @default(autoincrement())
+  tripId       Int
+  seatId       Int
+  fare         Int
+  createdAt    DateTime       @default(now())
+  pricingModel PricingModels?
+}
+
+model PastTripSeats {
+  id                Int                @id @default(autoincrement())
+  tripId            Int
+  seatId            Int
+  fare              Decimal
+  tax               Decimal
+  available         Boolean            @default(true)
+  availablityStatus AvailabilityStatus @default(A)
+  discount          Decimal
+  createdById       Int
+  createdAt         DateTime           @default(now())
+  availableAt       DateTime?
+  active            Boolean            @default(true)
+  hasStaticFare     Boolean            @default(false)
+  boardAvailFrom    DateTime?          @db.Timestamp(6)
+  boardAvailTill    DateTime?          @db.Timestamp(6)
+  destinationId     Int                @default(0)
+  sourceId          Int                @default(0)
+  broken            Boolean            @default(false)
+
+  @@unique([tripId, seatId, destinationId, sourceId], map: "PastTripSeats_tripId_seatId_sourceId_destinationId_idx")
+}
+
+model PromiseTransactionApprovals {
+  id                         Int                        @id @default(autoincrement())
+  requestId                  Int
+  stageId                    Int
+  updatedById                Int
+  status                     RequestStatus
+  remarks                    String
+  createdAt                  DateTime                   @default(now())
+  PromiseTransactionRequests PromiseTransactionRequests @relation(fields: [requestId], references: [id])
+  ApprovalStages             ApprovalStages             @relation(fields: [stageId], references: [id])
+  User                       User                       @relation(fields: [updatedById], references: [id])
+}
+
+model PromiseTransactionRequests {
+  id                          Int                           @id @default(autoincrement())
+  tripId                      Int
+  reason                      String
+  delayPoint                  String?
+  seats                       Int
+  status                      RequestStatus                 @default(PENDING)
+  ticketIds                   Int[]
+  currentStageId              Int
+  createdAt                   DateTime                      @default(now())
+  updatedAt                   DateTime                      @default(now())
+  amount                      Int
+  createdById                 Int?
+  PromiseTransactionApprovals PromiseTransactionApprovals[]
+  User                        User?                         @relation(fields: [createdById], references: [id])
+  ApprovalStages              ApprovalStages                @relation(fields: [currentStageId], references: [id])
+  Trips                       Trips                         @relation(fields: [tripId], references: [id])
+}
+
+model PromiseTransactions {
+  id                Int             @id @default(autoincrement())
+  ticketId          Int
+  assuredAmount     Decimal
+  payoutLink        String
+  expiryDate        DateTime
+  createdAt         DateTime        @default(now())
+  payoutId          String
+  payoutStatus      String
+  mobile            String?
+  updatedAt         DateTime?
+  active            Boolean         @default(true)
+  updatedById       Int?
+  fulfillmentId     String?
+  transactionRef    String?
+  transactionStatus String?
+  webhookUpdates    Json?
+  ReservedTickets   ReservedTickets @relation(fields: [ticketId], references: [id])
+}
+
+model RescheduleTicketSeats {
+  id                  Int             @id @default(autoincrement())
+  ticketId            Int
+  tripId              Int
+  seats               String
+  ticketTransactionId Int             @unique
+  createdAt           DateTime        @default(now())
+  boardingPointId     Int?
+  droppingPointId     Int?
+  BoardingPoints      BoardingPoints? @relation(fields: [boardingPointId], references: [id])
+  DroppingPoints      DroppingPoints? @relation(fields: [droppingPointId], references: [id])
+  Trips               Trips           @relation(fields: [tripId], references: [id])
+}
+
+model Routes {
+  id                                      Int                   @id @default(autoincrement())
+  sourceId                                Int
+  destinationId                           Int
+  active                                  Boolean               @default(true)
+  sciativeEnabled                         Boolean               @default(false)
+  distance                                Int                   @default(0)
+  brokenFare                              Int?
+  order                                   Int                   @default(0)
+  snacks                                  Boolean               @default(false)
+  hasMidPoint                             Boolean               @default(false)
+  isMain                                  Boolean               @default(false)
+  Discounts                               Discounts[]
+  Stations_Routes_destinationIdToStations Stations              @relation("Routes_destinationIdToStations", fields: [destinationId], references: [id])
+  Stations_Routes_sourceIdToStations      Stations              @relation("Routes_sourceIdToStations", fields: [sourceId], references: [id])
+  SchedulingApprovals                     SchedulingApprovals[]
+  TripDiscounts                           TripDiscounts[]
+
+  @@unique([sourceId, destinationId])
+}
+
+model SMSMessages {
+  ticketId               Int
+  mobile                 String
+  notificationType       String
+  messageId              String                   @unique
+  createdAt              DateTime                 @default(now()) @db.Timestamptz(6)
+  status                 String
+  template               String?
+  ReservedTickets        ReservedTickets          @relation(fields: [ticketId], references: [id])
+  WhatsappWebhookUpdates WhatsappWebhookUpdates[]
+}
+
+model SchedulingApprovals {
+  id              Int            @id @default(autoincrement())
+  routeId         Int
+  journeyFromDate DateTime
+  journeyToDate   DateTime
+  approvalType    ApprovalType
+  status          ApprovalStatus @default(PENDING)
+  createdAt       DateTime       @default(now())
+  createdBy       Int
+  rejectionReason String?
+  approvalId      String?
+  Routes          Routes         @relation(fields: [routeId], references: [id])
+
+  @@index([journeyFromDate, journeyToDate])
+}
+
+model ServiceAnalyticsData {
+  id                      Int      @id @default(autoincrement())
+  serviceId               Int
+  basicCost               Int
+  seaterLowerLimit        Int      @default(0)
+  sleeperLowerLimit       Int      @default(0)
+  sharedSleeperLowerLimit Int      @default(0)
+  seaterUpperLimit        Int      @default(0)
+  sleeperUpperLimit       Int      @default(0)
+  sharedSleeperUpperLimit Int      @default(0)
+  seater                  Int      @default(0)
+  sleeper                 Int      @default(0)
+  sharedSleeper           Int      @default(0)
+  Services                Services @relation(fields: [serviceId], references: [id])
+}
+
+model ServiceCompetitors {
+  id                    Int                     @id @default(autoincrement())
+  servieId              Int
+  journeyDate           DateTime                @db.Date
+  serviceKey            Int
+  journeyTimeMinutes    Int
+  competitorId          Int
+  CompetitorSeatPricing CompetitorSeatPricing[]
+  Competitors           Competitors             @relation(fields: [competitorId], references: [id])
+}
+
+model ServiceMidPoints {
+  midPointId    Int
+  serviceId     Int
+  day           Int       @default(0)
+  scheduledTime DateTime  @db.Time(6)
+  active        Boolean   @default(true)
+  waitTime      Int       @default(0)
+  MidPoints     MidPoints @relation(fields: [midPointId], references: [id])
+  Services      Services  @relation(fields: [serviceId], references: [id])
+
+  @@id([midPointId, serviceId])
+}
+
+model ServiceRatings {
+  serviceId           Int      @unique
+  redbusRating        Int
+  totalRedbusRatings  Int
+  abhibusRating       Int
+  abhibusTotalRatings Int
+  paytmRating         Int
+  paytmTotalRatings   Int
+  updatedAt           DateTime @default(now())
+}
+
+model Shifts {
+  id         Int          @id @default(autoincrement())
+  startTime  DateTime     @db.Time(6)
+  endTime    DateTime     @db.Time(6)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @default(now())
+  active     Boolean      @default(true)
+  UserShifts UserShifts[]
+}
+
+model Tasks {
+  id                            Int                @id @default(autoincrement())
+  taskType                      TaskTypes          @default(DailyMaintenance)
+  createdById                   Int
+  assignedToId                  Int?
+  vehicleId                     Int
+  createdAt                     DateTime           @default(now())
+  updatedAt                     DateTime?
+  active                        Boolean            @default(true)
+  stationId                     Int?
+  User_Tasks_assignedToIdToUser User?              @relation("Tasks_assignedToIdToUser", fields: [assignedToId], references: [id])
+  User_Tasks_createdByIdToUser  User               @relation("Tasks_createdByIdToUser", fields: [createdById], references: [id])
+  Stations                      Stations?          @relation(fields: [stationId], references: [id])
+  Vehicles                      Vehicles           @relation(fields: [vehicleId], references: [id])
+  VehicleQuestions              VehicleQuestions[]
+}
+
+model TempTicketBill {
+  id              Int                @id @default(autoincrement())
+  tempTicketId    Int
+  transactionData Json
+  billType        TempTicketBillType
+  createdAt       DateTime           @default(now())
+  active          Boolean            @default(true)
+  createdById     Int?
+  User            User?              @relation(fields: [createdById], references: [id])
+
+  @@index([tempTicketId, billType])
+}
+
+model TicketBoardingHistory {
+  id                 Int                @id @default(autoincrement())
+  ticketId           Int
+  tripId             Int
+  boardingpPointId   Int
+  createdAt          DateTime           @default(now())
+  ReservedTickets    ReservedTickets    @relation(fields: [ticketId], references: [id])
+  TripBoardingPoints TripBoardingPoints @relation(fields: [tripId, boardingpPointId], references: [tripId, boardingPointId])
+}
+
+model TicketCancellationDetails {
+  id                        Int                        @id @default(autoincrement())
+  ticketTransactionId       Int
+  cancellationPolicyId      Int
+  cancellationReasonId      Int?
+  refundPercentage          Int
+  CancellationPolicies      CancellationPolicies       @relation(fields: [cancellationPolicyId], references: [id])
+  TicketCancellationReasons TicketCancellationReasons? @relation(fields: [cancellationReasonId], references: [id])
+  TicketTransactions        TicketTransactions         @relation(fields: [ticketTransactionId], references: [id])
+}
+
+model TicketCancellationReasons {
+  id                        Int                         @id @default(autoincrement())
+  name                      String
+  active                    Boolean                     @default(true)
+  TicketCancellationDetails TicketCancellationDetails[]
+}
+
+model TicketDroppingHistory {
+  id                 Int                @id @default(autoincrement())
+  ticketId           Int
+  tripId             Int
+  droppingPointId    Int
+  createdAt          DateTime           @default(now())
+  ReservedTickets    ReservedTickets    @relation(fields: [ticketId], references: [id])
+  TripDroppingPoints TripDroppingPoints @relation(fields: [tripId, droppingPointId], references: [tripId, droppingPointId])
+}
+
+model TripBoardingPointTimingUpdates {
+  id                 Int                @id @default(autoincrement())
+  tripId             Int
+  boardingPointId    Int
+  minutes            Int
+  createdById        Int
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime
+  comment            String?
+  TripBoardingPoints TripBoardingPoints @relation(fields: [boardingPointId, tripId], references: [boardingPointId, tripId])
+  User               User               @relation(fields: [createdById], references: [id])
+  Trips              Trips              @relation(fields: [tripId], references: [id])
+}
+
+model TripBoardingPointsDelay {
+  tripId           Int
+  boardingPointId  Int
+  delayMins        Int
+  reasonId         Int
+  remarks          String?
+  active           Boolean          @default(true)
+  createdAt        DateTime         @default(now())
+  createdById      Int
+  BoardingPoints   BoardingPoints   @relation(fields: [boardingPointId], references: [id])
+  User             User             @relation(fields: [createdById], references: [id])
+  TripDelayReasons TripDelayReasons @relation(fields: [reasonId], references: [id])
+  Trips            Trips            @relation(fields: [tripId], references: [id])
+
+  @@unique([tripId, boardingPointId, reasonId])
+}
+
+model TripBreakdownQuestions {
+  breakdownId    Int
+  questionId     Int
+  answer         String
+  createdById    Int
+  createdAt      DateTime       @default(now())
+  TripBreakdowns TripBreakdowns @relation(fields: [breakdownId], references: [id])
+  User           User           @relation(fields: [createdById], references: [id])
+  Questions      Questions      @relation(fields: [questionId], references: [id])
+
+  @@unique([breakdownId, questionId])
+}
+
+model TripClassificationHistory {
+  id                 Int                  @id @default(autoincrement())
+  tripId             Int
+  createdAt          DateTime             @default(now())
+  pricingModel       PricingModels?
+  fareClassification FareClassifications?
+  updatedBy          Int?
+}
+
+model TripDelayReasons {
+  id                      Int                       @id @default(autoincrement())
+  mainCategory            String
+  subCategory             String
+  reason                  String
+  active                  Boolean                   @default(true)
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime?
+  TripBoardingPointsDelay TripBoardingPointsDelay[]
+  TripDroppingPointsDelay TripDroppingPointsDelay[]
+}
+
+model TripDiscountHistory {
+  id                 Int                @id @default(autoincrement())
+  tripId             Int
+  strategyId         Int
+  createdAt          DateTime           @default(now())
+  active             Boolean            @default(true)
+  DiscountStrategies DiscountStrategies @relation(fields: [strategyId], references: [id])
+  Trips              Trips              @relation(fields: [tripId], references: [id])
+}
+
+model TripDiscounts {
+  id                                    Int                @id @default(autoincrement())
+  serviceId                             Int
+  strategyId                            Int
+  createdById                           Int
+  fromDate                              DateTime           @db.Date
+  toDate                                DateTime           @db.Date
+  exclusionDates                        DateTime[]         @db.Date
+  active                                Boolean            @default(true)
+  createdAt                             DateTime           @default(now())
+  modifiedAt                            DateTime?          @default(now())
+  modifiedById                          Int?
+  routeId                               Int?
+  User_TripDiscounts_createdByIdToUser  User               @relation("TripDiscounts_createdByIdToUser", fields: [createdById], references: [id])
+  User_TripDiscounts_modifiedByIdToUser User?              @relation("TripDiscounts_modifiedByIdToUser", fields: [modifiedById], references: [id])
+  Routes                                Routes?            @relation(fields: [routeId], references: [id])
+  Services                              Services           @relation(fields: [serviceId], references: [id])
+  DiscountStrategies                    DiscountStrategies @relation(fields: [strategyId], references: [id])
+
+  @@unique([strategyId, serviceId, fromDate, toDate])
+}
+
+model TripDroppingPointTimingUpdates {
+  id                 Int                @id @default(autoincrement())
+  tripId             Int
+  droppingPointId    Int
+  minutes            Int
+  createdById        Int
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime
+  comment            String?
+  User               User               @relation(fields: [createdById], references: [id])
+  TripDroppingPoints TripDroppingPoints @relation(fields: [droppingPointId, tripId], references: [droppingPointId, tripId])
+  Trips              Trips              @relation(fields: [tripId], references: [id])
+}
+
+model TripDroppingPointsDelay {
+  tripId           Int
+  droppingPointId  Int
+  delayMins        Int
+  reasonId         Int
+  remarks          String?
+  active           Boolean          @default(true)
+  createdAt        DateTime         @default(now())
+  createdById      Int
+  User             User             @relation(fields: [createdById], references: [id])
+  DroppingPoints   DroppingPoints   @relation(fields: [droppingPointId], references: [id])
+  TripDelayReasons TripDelayReasons @relation(fields: [reasonId], references: [id])
+  Trips            Trips            @relation(fields: [tripId], references: [id])
+
+  @@unique([tripId, droppingPointId, reasonId])
+}
+
+model TripFareHistory {
+  id                   Int                   @id @default(autoincrement())
+  tripId               Int
+  changeType           FareChangeTypes
+  seats                String
+  change               Decimal
+  createdAt            DateTime              @default(now())
+  createdById          Int
+  notes                String?
+  reasonId             Int?
+  User                 User                  @relation(fields: [createdById], references: [id])
+  FareAdjustmentReason FareAdjustmentReason? @relation(fields: [reasonId], references: [id])
+}
+
+model TripMidPoints {
+  midPointId          Int
+  tripId              Int
+  scheduledTime       DateTime
+  currentTime         DateTime
+  actualTime          DateTime?
+  active              Boolean   @default(true)
+  actualDepartureTime DateTime? @db.Timestamp(6)
+  MidPoints           MidPoints @relation(fields: [midPointId], references: [id])
+  Trips               Trips     @relation(fields: [tripId], references: [id])
+
+  @@id([midPointId, tripId])
+}
+
+model TripProjectedRevenue {
+  id                 Int      @id @default(autoincrement())
+  tripId             Int
+  projectedRevenue   Int
+  projectedOccupency Int?
+  createdAt          DateTime @db.Timestamp(6)
+  Trips              Trips    @relation(fields: [tripId], references: [id])
+}
+
+model TripSeatAvailabilityStatus {
+  id                 Int                @id @default(autoincrement())
+  tripId             Int
+  seatId             Int
+  available          Boolean
+  availabilityStatus AvailabilityStatus
+  to                 Int
+  availableAt        DateTime?
+  from               Int
+  Seats              Seats              @relation(fields: [seatId], references: [id])
+  Trips              Trips              @relation(fields: [tripId], references: [id])
+}
+
+model TripSeatBasePrice {
+  id        Int       @id @default(autoincrement())
+  tripId    Int
+  seatType  SeatTypes
+  value     Int
+  createdAt DateTime  @default(now())
+  Trips     Trips     @relation(fields: [tripId], references: [id])
+}
+
+model TripSeatDiscounts {
+  id            Int    @id @default(autoincrement())
+  tripSeatId    Int    @unique
+  maxPercentage Float
+  maxFlatFare   Float
+  uptoAmount    Float?
+}
+
+model TripSeatFareHistory {
+  id           Int            @id @default(autoincrement())
+  tripId       Int
+  seatId       Int
+  fare         Int
+  createdAt    DateTime       @default(now())
+  pricingModel PricingModels?
+
+  @@index([seatId])
+}
+
+model TripSeatsLowerLimits {
+  id        Int       @id @default(autoincrement())
+  tripId    Int
+  seatType  SeatTypes
+  value     Int
+  createdAt DateTime  @default(now())
+  Trips     Trips     @relation(fields: [tripId], references: [id])
+}
+
+model TripUserAttributes {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  tripId    Int
+  createdAt DateTime @default(now())
+  Trips     Trips    @relation(fields: [tripId], references: [id])
+  User      User     @relation(fields: [userId], references: [id])
+}
+
+model TripsAnalyticsData {
+  id                        Int          @id @default(autoincrement())
+  tripId                    Int
+  createdAt                 DateTime     @default(now())
+  createdBy                 String
+  currentBaseFare           Int
+  currentProjectedOccupency Int?
+  currentProjectedRevenue   Int
+  currentRealizedOccupency  Int?
+  currentRealizedRevenue    Int
+  currentSoldAsp            Int
+  currentSoldOnline         Int?
+  currentSoldOta            Int?
+  currentUnsoldAsp          Int
+  currentUnsoldOnline       Int?
+  currentUnsoldRevenue      Int?
+  timeToStartMinutes        Int
+  trigger                   ModelTrigger
+  Trips                     Trips        @relation(fields: [tripId], references: [id])
+
+  @@index([tripId, createdAt])
+}
+
+model TyreRepairReasons {
+  id     Int     @id @default(autoincrement())
+  name   String
+  active Boolean @default(true)
+}
+
+model TyreScrapReasons {
+  id     Int     @id @default(autoincrement())
+  name   String
+  active Boolean @default(true)
+}
+
+model TyreSwitchReasons {
+  id           Int            @id @default(autoincrement())
+  name         String
+  active       Boolean        @default(true)
+  TyreSwitches TyreSwitches[]
+}
+
+model TyreSwitches {
+  id                Int                @id @default(autoincrement())
+  tyreId            Int
+  oldPosition       TyrePositions?
+  oldVehicleId      Int?
+  newVehicleId      Int?
+  newPosition       TyrePositions?
+  mileage           Int                @default(0)
+  frontMileage      Int                @default(0)
+  backMileage       Int                @default(0)
+  depth             Int                @default(0)
+  reasonId          Int?
+  createdAt         DateTime           @default(now())
+  createdById       Int
+  User              User               @relation(fields: [createdById], references: [id])
+  TyreSwitchReasons TyreSwitchReasons? @relation(fields: [reasonId], references: [id])
+  Tyres             Tyres              @relation(fields: [tyreId], references: [id])
+}
+
+model Tyres {
+  id           Int            @id @default(autoincrement())
+  number       String         @unique
+  brand        String
+  vehicleId    Int?
+  mileage      Int            @default(0)
+  tyrePosition TyrePositions?
+  frontMileage Int            @default(0)
+  backMileage  Int            @default(0)
+  depth        Int            @default(0)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @default(now())
+  active       Boolean        @default(true)
+  p1           Int            @default(0)
+  p2           Int            @default(0)
+  p3           Int            @default(0)
+  p4           Int            @default(0)
+  TyreSwitches TyreSwitches[]
+  Vehicles     Vehicles?      @relation(fields: [vehicleId], references: [id])
+}
+
+model TyresQuestions {
+  id          Int       @id @default(autoincrement())
+  tyreId      Int
+  switchId    Int
+  questionId  Int
+  answer      String
+  createdById Int
+  createdAt   DateTime  @default(now())
+  User        User      @relation(fields: [createdById], references: [id])
+  Questions   Questions @relation(fields: [questionId], references: [id])
+
+  @@unique([tyreId, switchId, questionId])
+}
+
+model UserAgentBalanceHistory {
+  id              Int                  @id @default(autoincrement())
+  userId          Int
+  previousBalance Decimal
+  newBalance      Decimal
+  action          BalanceHistoryAction
+  createdAt       DateTime             @default(now())
+  rechargeId      Int?
+  transactionId   Int?
+  User            User                 @relation(fields: [userId], references: [id])
+}
+
+model UserAnalyticsEvent {
+  id         Int                  @id @default(autoincrement())
+  userId     Int?
+  eventType  AnalyticsEventType
+  entityType AnalyticsEntityType?
+  entityId   Int?
+  metadata   Json?
+  createdAt  DateTime             @default(now())
+  User       User?                @relation(fields: [userId], references: [id])
+
+  @@index([createdAt])
+  @@index([userId, eventType])
+}
+
+model UserAttribute {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  namespace   String   @default("generic")
+  key         String
+  valueJson   Json?
+  valueText   String?
+  valueNumber Float?
+  valueBool   Boolean?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  User        User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, namespace, key])
+  @@index([userId, namespace])
+}
+
+model UserCaptainDetails {
+  uuid                Int       @unique
+  photo               String
+  dateOfBirth         DateTime  @db.Date
+  licenseNumber       String
+  licenseType         String
+  licenseExpiry       DateTime  @db.Date
+  licenseImage        String
+  lastCheckupDate     DateTime? @db.Date
+  pastExperienceYears Int
+  dateOfJoining       DateTime? @db.Date
+  active              Boolean   @default(true)
+  mobile              String?   @unique
+}
+
+model UserMobileTokens {
+  userId        Int
+  firebaseToken String   @unique
+  accessToken   String?
+  createdAt     DateTime @default(now())
+  User          User     @relation(fields: [userId], references: [id])
+}
+
+model UserShifts {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  slotId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  active    Boolean  @default(true)
+  Shifts    Shifts   @relation(fields: [slotId], references: [id])
+  User      User     @relation(fields: [userId], references: [id])
+}
+
+model VehicleComponentObservations {
+  id                                                   Int                   @id @default(autoincrement())
+  vehicleId                                            Int?
+  componentId                                          Int
+  answer                                               String
+  createdById                                          Int
+  createdAt                                            DateTime              @default(now())
+  resolvedAt                                           DateTime?
+  resolvedById                                         Int?
+  vehicleQuestionTypeId                                Int
+  active                                               Boolean               @default(true)
+  VehicleComponentTypes                                VehicleComponentTypes @relation(fields: [componentId], references: [id])
+  User_VehicleComponentObservations_createdByIdToUser  User                  @relation("VehicleComponentObservations_createdByIdToUser", fields: [createdById], references: [id])
+  User_VehicleComponentObservations_resolvedByIdToUser User?                 @relation("VehicleComponentObservations_resolvedByIdToUser", fields: [resolvedById], references: [id])
+  Vehicles                                             Vehicles?             @relation(fields: [vehicleId], references: [id])
+
+  @@unique([vehicleId, vehicleQuestionTypeId, componentId])
+}
+
+model VehicleComponentTypes {
+  id                           Int                            @id @default(autoincrement())
+  name                         String
+  type                         String
+  VehicleComponentObservations VehicleComponentObservations[]
+  VehicleComponents            VehicleComponents[]
+}
+
+model VehicleComponents {
+  id                           Int                            @id @default(autoincrement())
+  vendor                       String
+  vendorUniqueId               String
+  name                         String
+  type                         String
+  active                       Boolean                        @default(true)
+  componentTypeId              Int
+  VehicleComponentTypes        VehicleComponentTypes          @relation(fields: [componentTypeId], references: [id])
+  VehicleLiveComponents        VehicleLiveComponents[]
+  VehicleLiveComponentsHistory VehicleLiveComponentsHistory[]
+}
+
+model VehicleLiveComponents {
+  vehicleId         Int
+  componentId       Int
+  status            String
+  VehicleComponents VehicleComponents @relation(fields: [componentId], references: [id])
+  Vehicles          Vehicles          @relation(fields: [vehicleId], references: [id])
+
+  @@unique([vehicleId, componentId])
+}
+
+model VehicleLiveComponentsHistory {
+  id                                                      Int               @id @default(autoincrement())
+  vehicleId                                               Int
+  componentId                                             Int
+  status                                                  String
+  installedById                                           Int
+  installedAt                                             DateTime          @default(now())
+  uninstalledById                                         Int?
+  unInstalledAt                                           DateTime?
+  VehicleComponents                                       VehicleComponents @relation(fields: [componentId], references: [id])
+  User_VehicleLiveComponentsHistory_installedByIdToUser   User              @relation("VehicleLiveComponentsHistory_installedByIdToUser", fields: [installedById], references: [id])
+  User_VehicleLiveComponentsHistory_uninstalledByIdToUser User?             @relation("VehicleLiveComponentsHistory_uninstalledByIdToUser", fields: [uninstalledById], references: [id])
+  Vehicles                                                Vehicles          @relation(fields: [vehicleId], references: [id])
+}
+
+model VehicleObservations {
+  id               Int                @id @default(autoincrement())
+  vehicleId        Int
+  tripId           Int?               @unique
+  observation      String?
+  createdAt        DateTime           @default(now())
+  createdById      Int
+  active           Boolean            @default(true)
+  User             User               @relation(fields: [createdById], references: [id])
+  Trips            Trips?             @relation(fields: [tripId], references: [id])
+  Vehicles         Vehicles           @relation(fields: [vehicleId], references: [id])
+  VehicleQuestions VehicleQuestions[]
+}
+
+model VehicleQuestions {
+  id                  Int                  @id @default(autoincrement())
+  vehicleId           Int
+  questionId          Int
+  answer              String
+  createdById         Int
+  createdAt           DateTime             @default(now())
+  isOpen              Boolean              @default(true)
+  observationId       Int?
+  taskId              Int?
+  User                User                 @relation(fields: [createdById], references: [id])
+  VehicleObservations VehicleObservations? @relation(fields: [observationId], references: [id])
+  Questions           Questions            @relation(fields: [questionId], references: [id])
+  Tasks               Tasks?               @relation(fields: [taskId], references: [id])
+  Vehicles            Vehicles             @relation(fields: [vehicleId], references: [id])
+
+  @@unique([questionId, vehicleId, observationId])
+  @@unique([questionId, vehicleId, taskId])
+}
+
+model ViaStationRoutes {
+  id        Int      @id @default(autoincrement())
+  serviceId Int      @unique
+  stations  Int[]
+  Services  Services @relation(fields: [serviceId], references: [id])
+}
+
+model ViaStationTrips {
+  id                                               Int      @id @default(autoincrement())
+  tripId                                           Int
+  sourceId                                         Int
+  destinationId                                    Int
+  fareCorrection                                   Decimal  @default(0)
+  active                                           Boolean  @default(true)
+  breakFarePercent                                 Int      @default(100)
+  Stations_ViaStationTrips_destinationIdToStations Stations @relation("ViaStationTrips_destinationIdToStations", fields: [destinationId], references: [id])
+  Stations_ViaStationTrips_sourceIdToStations      Stations @relation("ViaStationTrips_sourceIdToStations", fields: [sourceId], references: [id])
+  Trips                                            Trips    @relation(fields: [tripId], references: [id])
+}
+
+model WhatsappMessages {
+  ticketId          Int
+  mobile            String
+  notificationType  String
+  messageId         String             @unique @db.Uuid
+  createdAt         DateTime           @default(now()) @db.Timestamptz(6)
+  status            String
+  template          String?
+  WhatsappTemplates WhatsappTemplates? @relation(fields: [template], references: [templateId])
+  ReservedTickets   ReservedTickets    @relation(fields: [ticketId], references: [id])
+}
+
+model WhatsappTemplates {
+  templateName     String?
+  templateId       String             @id
+  templateType     String?
+  createdAt        DateTime           @default(now()) @db.Timestamptz(6)
+  updatedAt        DateTime           @default(now()) @db.Timestamptz(6)
+  facebookId       String?
+  description      String?
+  WhatsappMessages WhatsappMessages[]
+}
+
+model WhatsappWebhookUpdates {
+  id                        BigInt       @id @default(autoincrement())
+  messageId                 String       @db.Uuid
+  status                    String
+  comment                   String?
+  createdAt                 DateTime     @default(now()) @db.Timestamptz(6)
+  whatsappMessagesMessageId String?      @db.Uuid
+  sMSMessagesMessageId      String?
+  errorCode                 String?
+  errorReason               String?
+  SMSMessages               SMSMessages? @relation(fields: [sMSMessagesMessageId], references: [messageId])
+}
+
+model AgentCommissionTransactionsToTicketTransactions {
+  A                           Int
+  B                           Int
+  AgentCommissionTransactions AgentCommissionTransactions @relation(fields: [A], references: [id], onDelete: Cascade)
+  TicketTransactions          TicketTransactions          @relation(fields: [B], references: [id], onDelete: Cascade)
+
+  @@id([A, B], map: "_AgentCommissionTransactionsToTicketTransactions_AB_pkey")
+  @@index([B], map: "_AgentCommissionTransactionsToTicketTransactions_B_index")
+  @@map("_AgentCommissionTransactionsToTicketTransactions")
+}
+
+model AmenitiesToServices {
+  A         Int
+  B         Int
+  Amenities Amenities @relation(fields: [A], references: [id], onDelete: Cascade)
+  Services  Services  @relation(fields: [B], references: [id], onDelete: Cascade)
+
+  @@id([A, B], map: "_AmenitiesToServices_AB_pkey")
+  @@index([B], map: "_AmenitiesToServices_B_index")
+  @@map("_AmenitiesToServices")
+}
+
+model AmenitiesToTrips {
+  A         Int
+  B         Int
+  Amenities Amenities @relation(fields: [A], references: [id], onDelete: Cascade)
+  Trips     Trips     @relation(fields: [B], references: [id], onDelete: Cascade)
+
+  @@id([A, B], map: "_AmenitiesToTrips_AB_pkey")
+  @@index([B], map: "_AmenitiesToTrips_B_index")
+  @@map("_AmenitiesToTrips")
+}
+
+model ReservedTicketSeatsToTicketTransactions {
+  A                   Int
+  B                   Int
+  ReservedTicketSeats ReservedTicketSeats @relation(fields: [A], references: [id], onDelete: Cascade)
+  TicketTransactions  TicketTransactions  @relation(fields: [B], references: [id], onDelete: Cascade)
+
+  @@id([A, B], map: "_ReservedTicketSeatsToTicketTransactions_AB_pkey")
+  @@index([B], map: "_ReservedTicketSeatsToTicketTransactions_B_index")
+  @@map("_ReservedTicketSeatsToTicketTransactions")
+}
+
+model StationsToUser {
+  A        Int
+  B        Int
+  Stations Stations @relation(fields: [A], references: [id], onDelete: Cascade)
+  User     User     @relation(fields: [B], references: [id], onDelete: Cascade)
+
+  @@id([A, B], map: "_StationsToUser_AB_pkey")
+  @@index([B], map: "_StationsToUser_B_index")
+  @@map("_StationsToUser")
+}
+
+model tripCaptains {
+  A     Int
+  B     Int
+  Trips Trips @relation(fields: [A], references: [id], onDelete: Cascade)
+  User  User  @relation(fields: [B], references: [id], onDelete: Cascade)
+
+  @@id([A, B], map: "_tripCaptains_AB_pkey")
+  @@index([B], map: "_tripCaptains_B_index")
+  @@map("_tripCaptains")
+}
+
+model tripReassignCaptains {
+  A             Int
+  B             Int
+  TripReassigns TripReassigns @relation(fields: [A], references: [id], onDelete: Cascade)
+  User          User          @relation(fields: [B], references: [id], onDelete: Cascade)
+
+  @@id([A, B], map: "_tripReassignCaptains_AB_pkey")
+  @@index([B], map: "_tripReassignCaptains_B_index")
+  @@map("_tripReassignCaptains")
+}
+
+model tripReassignPreviousCaptains {
+  A             Int
+  B             Int
+  TripReassigns TripReassigns @relation(fields: [A], references: [id], onDelete: Cascade)
+  User          User          @relation(fields: [B], references: [id], onDelete: Cascade)
+
+  @@id([A, B], map: "_tripReassignPreviousCaptains_AB_pkey")
+  @@index([B], map: "_tripReassignPreviousCaptains_B_index")
+  @@map("_tripReassignPreviousCaptains")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model abhibus_discounts_25_26 {
+  S_No          Int?    @map("S.No")
+  Ticket_Number String? @map("Ticket Number") @db.VarChar(50)
+  Operator_PNR  String? @map("Operator PNR") @db.VarChar(50)
+  doj           String? @db.VarChar(50)
+  seats         String? @db.VarChar(50)
+  Ticket_Amount Int?    @map("Ticket Amount")
+  commission    Float?  @db.Real
+  Serv_Tax      Float?  @map("Serv.Tax") @db.Real
+  Edge_Offer    Float?  @map("Edge Offer") @db.Real
+  Net_Amount    Float?  @map("Net Amount") @db.Real
+  pnr           String? @db.VarChar(50)
+
+  @@ignore
+}
+
+model alcoholInitiateHistory {
+  id            Int      @id @default(autoincrement())
+  vehicleNumber String
+  alcobrakeId   String
+  tripId        Int
+  createdAt     DateTime @default(now())
+  createdById   Int
+  reason        String
+  comment       String?
+  initiatorName String
+  User          User     @relation(fields: [createdById], references: [id])
+  Trips         Trips    @relation(fields: [tripId], references: [id])
+  Vehicles      Vehicles @relation(fields: [vehicleNumber], references: [vehicleNumber])
+}
+
+model audit_logs {
+  id         BigInt    @id @default(autoincrement())
+  table_name String
+  operation  String
+  old_data   Json?
+  new_data   Json?
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  userid     String
+}
+
+model awsdms_ddl_audit {
+  c_key    BigInt    @id @default(autoincrement())
+  c_time   DateTime? @db.Timestamp(6)
+  c_user   String?   @db.VarChar(64)
+  c_txn    String?   @db.VarChar(16)
+  c_tag    String?   @db.VarChar(24)
+  c_oid    Int?
+  c_name   String?   @db.VarChar(64)
+  c_schema String?   @db.VarChar(64)
+  c_ddlqry String?
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model finance_data_validation {
+  id                          BigInt?
+  Ticket_No                   String? @map("Ticket No") @db.VarChar(50)
+  From                        String? @db.VarChar(50)
+  To                          String? @db.VarChar(50)
+  pos                         String? @db.VarChar(50)
+  sales                       String? @db.VarChar(50)
+  Journey_Date                String? @map("Journey Date") @db.VarChar(50)
+  Seat_Fare__Rs_              Float?  @map("Seat Fare (Rs)")
+  Seat_Service_Tax__Rs_       Float?  @map("Seat Service Tax (Rs)")
+  Total_Ticket_Amount__Rs_    String? @map("Total Ticket Amount (Rs)") @db.VarChar(50)
+  Total_Service_Tax__Rs_      Float?  @map("Total Service Tax (Rs)")
+  Discount_Amount__Rs_        Float?  @map("Discount Amount (Rs)")
+  Ticket_Status               String? @map("Ticket Status") @db.VarChar(50)
+  Seat_Number                 BigInt? @map("Seat Number")
+  Seat_Agent_Commission       Float?  @map("Seat Agent Commission")
+  Seat_Distributor_Commission Float?  @map("Seat Distributor Commission")
+  category                    String? @db.VarChar(50)
+  mobile                      String?
+  Seat_Discount_Amount__Rs_   Float?  @map("Seat Discount Amount (Rs)")
+  Green_Coins                 Float?  @map("Green Coins")
+  FreshPass_ID                Float?  @map("FreshPass ID")
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model finance_data_validation_25_26 {
+  Ticket_No                 String? @map("Ticket No") @db.VarChar(50)
+  From                      String? @db.VarChar(50)
+  To                        String? @db.VarChar(50)
+  Journey_Date              String? @map("Journey Date") @db.VarChar(50)
+  Seat_Fare__Rs_            String? @map("Seat Fare (Rs)") @db.VarChar(50)
+  Seat_Service_Tax__Rs_     Float?  @map("Seat Service Tax (Rs)") @db.Real
+  Discount_Amount__Rs_      Float?  @map("Discount Amount (Rs)") @db.Real
+  Seat_Discount_Amount__Rs_ Float?  @map("Seat Discount Amount (Rs)") @db.Real
+  Sub_Category              String? @map("Sub Category") @db.VarChar(50)
+  Green_Coins               Int?    @map("Green Coins")
+  Abhibus_Disc              Float?  @map("Abhibus Disc") @db.Real
+  Redbus_Disc               Float?  @map("Redbus Disc") @db.Real
+  Paytm_Discount            Float?  @map("Paytm Discount") @db.Real
+  Total_Disc                Float?  @map("Total Disc") @db.Real
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model future_classification {
+  Date    String? @db.VarChar(50)
+  bt      String? @db.VarChar(50)
+  tb      String? @db.VarChar(50)
+  hv      String? @db.VarChar(50)
+  vh      String? @db.VarChar(50)
+  vijvksp String? @db.VarChar(50)
+  vkspvij String? @db.VarChar(50)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model ga_events {
+  event_date                        DateTime? @db.Date
+  event_timestamp                   DateTime? @db.Timestamp(6)
+  event_name                        String?
+  event_params                      Json?
+  event_previous_timestamp          DateTime? @db.Timestamp(6)
+  event_value_in_usd                Decimal?  @db.Decimal
+  event_bundle_sequence_id          BigInt?
+  event_server_timestamp_offset     BigInt?
+  user_id                           String?
+  user_pseudo_id                    String?
+  privacy_info                      Json?
+  user_properties                   Json?
+  user_first_touch_timestamp        DateTime? @db.Timestamp(6)
+  user_ltv                          Json?
+  device                            Json?
+  geo                               Json?
+  app_info                          Json?
+  traffic_source                    Json?
+  stream_id                         BigInt?
+  platform                          String?
+  event_dimensions                  Json?
+  ecommerce                         Json?
+  items                             Json?
+  collected_traffic_source          Json?
+  is_active_user                    Boolean?
+  batch_event_index                 Int?
+  batch_page_id                     BigInt?
+  batch_ordering_id                 BigInt?
+  session_traffic_source_last_click Json?
+  publisher                         Json?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model ga_pseudo_users {
+  pseudo_user_id    String?
+  stream_id         BigInt?
+  user_info         Json?
+  device            Json?
+  geo               Json?
+  audiences         Json?
+  user_properties   Json?
+  user_ltv          Json?
+  predictions       Json?
+  privacy_info      Json?
+  occurrence_date   DateTime? @db.Date
+  last_updated_date DateTime? @db.Date
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model ga_users {
+  user_id           BigInt?
+  user_info         Json?
+  device            Json?
+  geo               Json?
+  audiences         Json?
+  user_properties   Json?
+  user_ltv          Json?
+  predictions       Json?
+  privacy_info      Json?
+  occurrence_date   DateTime? @db.Date
+  last_updated_date DateTime? @db.Date
+
+  @@ignore
+}
+
+model logs {
+  id         BigInt    @id @default(autoincrement())
+  table_name String
+  operation  String
+  old_data   Json?
+  new_data   Json?
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  userid     String
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model paytm_discounts {
+  Ticket_No                 String? @map("Ticket No") @db.VarChar(50)
+  For_Likith_Final_Disocunt Int?    @map("For Likith Final Disocunt")
+  category                  String? @db.VarChar(50)
+  Sub_Category              String? @map("Sub Category") @db.VarChar(50)
+  Journey_Date              String? @map("Journey Date") @db.VarChar(50)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model paytm_discounts_25_26 {
+  pnr             String? @db.VarChar(50)
+  Journey_Date    String? @map("Journey Date") @db.VarChar(50)
+  Seat_No_        String? @map("Seat No.") @db.VarChar(50)
+  Seat_Count      Int?    @map("Seat Count")
+  Base_fare       Int?    @map("Base fare")
+  discount        Float?  @db.Real
+  Disc__Base_fare Int?    @map("Disc. Base fare")
+  Ecom__GST       Float?  @map("Ecom. GST") @db.Real
+  Total_Fare      Float?  @map("Total Fare") @db.Real
+  sector          String? @db.VarChar(50)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model paytm_overall_discounts {
+  pnr                          String? @db.VarChar(50)
+  item_created                 String? @db.VarChar(50)
+  Journey_Date                 String? @map("Journey Date") @db.VarChar(50)
+  items_count                  Int?
+  coupon_code                  String? @db.VarChar(50)
+  base_fare                    Int?
+  total_fare                   Float?  @db.Real
+  grand_total                  Float?  @db.Real
+  tax                          Float?  @db.Real
+  discount                     Int?
+  Cashback__Discount           Int?    @map("Cashback+ Discount")
+  Invoice_Discount_Ticket_Wise Int?    @map("Invoice Discount Ticket Wise")
+  For_Internal                 Float?  @map("For Internal") @db.Real
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model postgresLogs {
+  id        BigInt?   @default(autoincrement())
+  tableName String?
+  operation String?
+  old_data  Json?
+  new_data  Json?
+  createdAt DateTime? @db.Timestamp(6)
+  createdBy String?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model redbus_discounts_25_26 {
+  tin                      String? @db.VarChar(50)
+  pnr                      String? @db.VarChar(50)
+  route                    String? @db.VarChar(50)
+  seats                    String? @db.VarChar(50)
+  Ticket_Fare              Int?    @map("Ticket Fare")
+  Others                   Float?  @db.Real
+  Commission_Without_      Float?  @map("Commission Without ") @db.Real
+  CGST_On_                 Float?  @map("CGST On ") @db.Real
+  SGST_On_                 Float?  @map("SGST On ") @db.Real
+  IGST_On_Commission       Int?    @map("IGST On Commission")
+  Primo_Commission         String? @map("Primo Commission") @db.VarChar(50)
+  CGST_On_Primo_Commission String? @map("CGST On Primo Commission") @db.VarChar(50)
+  SGST_On_Primo_Commission String? @map("SGST On Primo Commission") @db.VarChar(50)
+  IGST_On_Primo_Commission String? @map("IGST On Primo Commission") @db.VarChar(50)
+  Total_Commission_        Float?  @map("Total Commission ") @db.Real
+  netpayable               Float?  @db.Real
+  Operator_Offer           Float?  @map("Operator Offer") @db.Real
+  Campaign_Id              String? @map("Campaign Id") @db.VarChar(50)
+  isopenticket             String? @db.VarChar(50)
+  differentialgstonl       Int?
+  PNR_                     String? @map(" PNR ") @db.VarChar(50)
+  Commission_Without       Float?  @map("Commission Without") @db.Real
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model revenue_fy24_25 {
+  Ticket_No           String? @map("Ticket No")
+  From                String? @db.VarChar(50)
+  To                  String? @db.VarChar(50)
+  Journey_Date        String? @map("Journey Date") @db.VarChar(50)
+  Seat_Count          Int?    @map("Seat Count")
+  Seat_Fare           Int?    @map("Seat Fare")
+  Seat_Service_Tax    Int?    @map("Seat Service Tax")
+  Ticket_Status       String? @map("Ticket Status") @db.VarChar(50)
+  Sub_Category        String? @map("Sub Category") @db.VarChar(50)
+  Seat_Discount       Float?  @map("Seat Discount") @db.Real
+  Green_Coins         Float?  @map("Green Coins") @db.Real
+  Redbus_Discount     Float?  @map("Redbus Discount") @db.Real
+  Abhibus_Discount    Float?  @map("Abhibus Discount") @db.Real
+  Paytm_Discount      Float?  @map("Paytm Discount") @db.Real
+  Total_Discount      Float?  @map("Total Discount") @db.Real
+  Fresh_pass_discount Float?  @map("Fresh pass discount") @db.Real
+  total_Discount_1    Float?  @map("total Discount_1") @db.Real
+  Freshpass_ID        Float?  @map("Freshpass ID") @db.Real
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model sales_data_fy_25_26 {
+  Ticket_No                 String? @map("Ticket No") @db.VarChar(50)
+  From                      String? @db.VarChar(50)
+  To                        String? @db.VarChar(50)
+  Journey_Date              String? @map("Journey Date") @db.VarChar(50)
+  Ticket_Count              Int?    @map("Ticket Count")
+  Set_Fare_                 String? @map(" Set Fare ") @db.VarChar(50)
+  Service_Tax_              String? @map(" Service Tax ") @db.VarChar(50)
+  discount                  String? @db.VarChar(50)
+  Green_Coins               String? @map("Green Coins") @db.VarChar(50)
+  Freshpass_Discount        String? @map("Freshpass Discount") @db.VarChar(50)
+  Total_Discount            String? @map("Total Discount") @db.VarChar(50)
+  Booked_By_Name            String? @map("Booked By Name") @db.VarChar(50)
+  Booked_By_Code            String? @map("Booked By Code") @db.VarChar(50)
+  category                  String? @db.VarChar(50)
+  Sub_Category              String? @map("Sub Category") @db.VarChar(50)
+  sector                    String? @db.VarChar(50)
+  route                     String? @db.VarChar(50)
+  Vehicle_Number            String? @map("Vehicle Number") @db.VarChar(50)
+  Paytm_Vouchers            Int?    @map("Paytm Vouchers")
+  Paytm_Freshbus            Int?    @map("Paytm Freshbus")
+  Final_Discount            String? @map("Final Discount") @db.VarChar(50)
+  Net_Revenue               String? @map("Net Revenue") @db.VarChar(50)
+  For_Likith_Final_Disocunt String? @map("For Likith Final Disocunt") @db.VarChar(50)
+
+  @@ignore
+}
+
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model table_size_snapshots {
+// }
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model temp_bt_data {
+  id                       Int?
+  Ticket_No                String? @map("Ticket No") @db.VarChar(50)
+  Seat_Fare__Rs_           Int?    @map("Seat Fare (Rs)")
+  Seat_Service_Tax__Rs_    Float?  @map("Seat Service Tax (Rs)") @db.Real
+  Total_Ticket_Amount__Rs_ Int?    @map("Total Ticket Amount (Rs)")
+  Total_Service_Tax__Rs_   Float?  @map("Total Service Tax (Rs)") @db.Real
+  Discount_Amount__Rs_     Int?    @map("Discount Amount (Rs)")
+  Ticket_Status            String? @map("Ticket Status") @db.VarChar(50)
+  Seat_Number              Int?    @map("Seat Number")
+
+  @@ignore
+}
+
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model wal_lsn_daily_snapshot {
+// }
+
+enum AvailabilityStatus {
+  A
+  M
+  F
+}
+
+enum FinanceTransactionTypes {
+  Credit
+  Debit
+}
+
+enum Gender {
+  Male
+  Female
+}
+
+enum GreenCoinTransactionTypes {
+  Assured
+  Booked
+  Cancel
+  Referral
+  Signup
+  Retention
+  Exception
+  Expired
+  FunnelDropoff
+  OnHold
+}
+
+enum TicketTransactionTypes {
+  Booked
+  Cancel
+  PartialCancel
+  Reschedule
+}
+
+enum TransactionTypes {
+  Percent
+  Flat
+}
+
+enum AnalyticsEntityType {
+  TRIPS
+  SERVICES
+}
+
+enum AnalyticsEventType {
+  SEARCH
+  OPEN
+  VIEW
+  CLICK
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ApprovalType {
+  SCHEDULE
+  MATRIX
+}
+
+enum BalanceHistoryAction {
+  BOOKING
+  CANCELLATION
+  RECHARGE
+}
+
+enum BoardStatus {
+  BOARDED
+  MISSED
+}
+
+enum BreakdownAssignment {
+  VehicleAssigned
+  AssignedToUpcomingService
+}
+
+enum BreakpadPosition {
+  FL
+  FR
+  RL
+  RR
+}
+
+enum CaptainIncentiveType {
+  QRTicket
+  ReturnTicket
+  RedbusRating
+  Driving
+  Behaviour
+  AccountCredited
+  TicketCancellation
+}
+
+enum DealTimingType {
+  SelectedTimings
+  Always
+}
+
+enum DiscountStategyType {
+  Normal
+}
+
+enum DiscountType {
+  Percentage
+  Flat
+}
+
+enum DiscountTypes {
+  ReturnDiscount
+}
+
+enum EmployeeCouponsType {
+  PERSONAL
+  BUSINESS
+}
+
+enum FareChangeTypes {
+  StaticFare
+  DynamicFare
+  FareAdjustment
+  SeatDifferential
+  BaseFareDifferential
+}
+
+enum FareClassifications {
+  Super_Low
+  Low
+  Medium
+  High
+  Super_High
+  Festive
+  Ultra_High
+  Special_High
+}
+
+enum FreshCardOfferStatus {
+  Credited
+  Consumed
+  Expired
+  OnHold
+}
+
+enum FreshCardTransactionTypes {
+  Consumed
+  Purchased
+  Refunded
+  Expired
+  OnHold
+}
+
+enum FreshcardPlatformType {
+  Website
+  IOS
+  Android
+  Martech
+  Admin
+}
+
+enum FreshcardPurchaseType {
+  Booking
+  Direct
+  Campaign
+}
+
+enum GPSTelematicsDevice {
+  VehicleVTS
+  Alcobrake
+  Bytebeam
+  Intangles
+}
+
+enum MainCategory {
+  OTA
+  Online
+  Offline
+}
+
+enum ModelTrigger {
+  Booking
+  Interval
+  Intervention
+}
+
+enum PricingModels {
+  Automation_v1
+  Model_v1
+  Automation_v2
+  Sciative
+  Model_v2
+  Automation_v3
+  Automation_v4
+}
+
+enum RechargeReason {
+  Join_topUp
+  Incentives
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum SeatTypes {
+  seater
+  singleSleeper
+  sharedSleeper
+}
+
+enum SubCategory {
+  Redbus
+  Abhibus
+  Paytm
+  Website
+  IOS
+  Android
+  Agent
+  Sales
+  Captain
+  QR
+  Bulk
+  Others
+}
+
+enum TaskTypes {
+  DailyMaintenance
+  TwoWeekMaintenance
+  TripBreakdown
+  CaptainComplaint
+}
+
+enum TempTicketBillType {
+  BLOCK
+  BOOKING
+}
+
+enum TyrePositions {
+  FL
+  RRI
+  RRO
+  FR
+  RLI
+  RLO
+}
+
+enum VehicleCategory {
+  SEATER
+  SLEEPER
+  SEMI_SLEEPER
+  BOTH_SEATER_SLEEPER
+  BOTH_SEATER_SEMI_SLEEPER
+  BOTH_SLEEPPER_SEMI_SLEEPER
+  ALL_THREE
+}
+
+enum VisitTypes {
+  Look
+  Block
+  Book
+}
