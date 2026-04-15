@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { 
   BusFront, 
   LayoutDashboard, 
@@ -21,6 +21,7 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const getBreadcrumb = () => {
     if (pathname.includes('/captain')) return 'Captain Dashboard';
@@ -30,12 +31,16 @@ export default function DashboardLayout({
   };
 
   const getRoleNav = () => {
+    // Build query string from current URL params (to preserve captainId, captainName, etc.)
+    const queryString = searchParams.toString();
+    const queryPrefix = queryString ? `?${queryString}` : '';
+    
     // For demo purposes, we define static nav paths for whichever dashboard is currently active.
     // In reality this would be driven by the user's role.
     if (pathname.includes('/captain')) {
       return [
-        { name: "My Performance", href: "/dashboard/captain", icon: <LayoutDashboard size={20} /> },
-        { name: "Trip History", href: "/dashboard/captain/history", icon: <Map size={20} /> }
+        { name: "My Performance", href: `/dashboard/captain${queryPrefix}`, icon: <LayoutDashboard size={20} /> },
+        { name: "Trip History", href: `/dashboard/captain/history${queryPrefix}`, icon: <Map size={20} /> }
       ];
     } else if (pathname.includes('/depot')) {
       return [

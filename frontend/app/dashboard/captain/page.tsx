@@ -59,16 +59,24 @@ export default function CaptainDashboard() {
     setHistoricalData(formattedData);
   }, [realTripsData, activeFilter]);
 
-  // Derived Metrics - Calculate attendance based on assignments vs total days in period
+  // Derived Metrics - Calculate attendance based on unique assignment days vs total days in period
   const metrics = useMemo(() => {
     const daysBack = Number(activeFilter);
-    const assignedCount = historicalData.length;
-    const attendancePercentage = Math.round((assignedCount / daysBack) * 100);
+    
+    // Get unique dates from historicalData (not trip count)
+    const uniqueDateSet = new Set<string>();
+    historicalData.forEach((trip: any) => {
+      const dateStr = new Date(trip.journeyDate).toISOString().split('T')[0];
+      uniqueDateSet.add(dateStr);
+    });
+    
+    const uniqueAssignedDays = uniqueDateSet.size;
+    const attendancePercentage = Math.round((uniqueAssignedDays / daysBack) * 100);
     
     return {
-      present: assignedCount,
+      present: uniqueAssignedDays,  // Count unique days, not trips
       absent: 0,
-      avg: attendancePercentage  // Percentage of days with assignments in the period
+      avg: Math.min(attendancePercentage, 100)  // Cap at 100% to avoid over 100%
     };
   }, [historicalData, activeFilter]);
 
@@ -87,6 +95,14 @@ export default function CaptainDashboard() {
 
   const getAttendanceForDate = (date: Date) => {
     const dateStr = date.toISOString().split('T')[0];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Only show attendance for past dates or today, not future dates
+    if (date > today) {
+      return null; // Future dates = no shift
+    }
+    
     const trip = realTripsData.find((t: any) => t.journeyDate.split('T')[0] === dateStr);
     
     // If trip is assigned = Present

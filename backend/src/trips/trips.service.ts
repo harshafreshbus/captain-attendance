@@ -468,10 +468,7 @@ export class TripsService {
         STRING_AGG(DISTINCT ta."serviceNumber", ', ') AS "services",
         STRING_AGG(DISTINCT ta."vehicleNumber", ', ') AS "vehicles",
         CASE 
-          WHEN COUNT(DISTINCT ta."tripId") > 0 AND COUNT(DISTINCT CASE WHEN ta."startedAt" IS NOT NULL THEN ta."tripId" END) > 0 
-          THEN 'Present'
-          WHEN COUNT(DISTINCT ta."tripId") > 0 AND COUNT(DISTINCT CASE WHEN ta."startedAt" IS NOT NULL THEN ta."tripId" END) = 0
-          THEN 'Absent'
+          WHEN COUNT(DISTINCT ta."tripId") > 0 THEN 'Assigned'
           ELSE 'Unassigned'
         END AS "status"
       FROM captains_data cd
@@ -480,6 +477,73 @@ export class TripsService {
       ORDER BY cd."depotName", cd."captainName" ASC;
     `;
     
+    const result = await this.prisma.$queryRawUnsafe<any[]>(rawSql);
+    return result;
+  }
+
+  // 8. DEPOT SUMMARY (For operations manager dashboard - all depot stats)
+  async getDepotSummary() {
+    const rawSql = `
+      WITH depot_captains AS (
+        SELECT 
+          st."id" AS "stationId",
+          st."name" AS "stationName",
+          u."id" AS "captainId",
+          CONCAT(u."firstName", ' ', COALESCE(u."lastName", '')) AS "captainName"
+        FROM "public"."User" u
+        INNER JOIN "public"."Stations" st ON u."depotStationId" = st."id"
+        WHERE u."userTypeId" = 4 AND u."active" = true
+      ),
+      today_assignments AS (
+        SELECT DISTINCT
+          u."depotStationId" AS "stationId",
+          u."id" AS "captainId"
+        FROM "public"."TripQuestions" tq
+        LEFT JOIN "public"."Trips" t ON tq."tripId" = t."id"
+        LEFT JOIN "public"."Questions" q ON tq."questionId" = q."id"
+        LEFT JOIN "public"."User" u ON u."id" = NULLIF(SPLIT_PART(tq."answer", '-', 1), '')::INTEGER
+        WHERE q."name" IN ('Captain', 'Co-Captain')
+          AND t."journeyDate" = CURRENT_DATE
+          AND u."active" = true
+      ),
+      started_trips AS (
+        SELECT DISTINCT
+          u."depotStationId" AS "stationId",
+          u."id" AS "captainId"
+        FROM "public"."TripQuestions" tq
+        LEFT JOIN "public"."Trips" t ON tq."tripId" = t."id"
+        LEFT JOIN "public"."Questions" q ON tq."questionId" = q."id"
+        LEFT JOIN "public"."User" u ON u."id" = NULLIF(SPLIT_PART(tq."answer", '-', 1), '')::INTEGER
+        WHERE q."name" IN ('Captain', 'Co-Captain')
+          AND t."journeyDate" = CURRENT_DATE
+          AND t."startedAt" IS NOT NULL
+          AND u."active" = true
+      ),
+      depot_stats AS (
+        SELECT 
+          dc."stationId",
+          dc."stationName",
+          COUNT(DISTINCT dc."captainId")::INTEGER AS "totalCaptains",
+          COALESCE(COUNT(DISTINCT CASE WHEN st."captainId" IS NOT NULL THEN dc."captainId" END), 0)::INTEGER AS "assignedToday",
+          COALESCE(COUNT(DISTINCT CASE WHEN sr."captainId" IS NOT NULL THEN dc."captainId" END), 0)::INTEGER AS "presentToday",
+          COALESCE(COUNT(DISTINCT CASE WHEN dc."captainId" IS NOT NULL AND st."captainId" IS NULL THEN dc."captainId" END), 0)::INTEGER AS "absentToday"
+        FROM depot_captains dc
+        LEFT JOIN today_assignments st ON dc."captainId" = st."captainId" AND dc."stationId" = st."stationId"
+        LEFT JOIN started_trips sr ON dc."captainId" = sr."captainId" AND dc."stationId" = sr."stationId"
+        GROUP BY dc."stationId", dc."stationName"
+      )
+      SELECT 
+        "stationId",
+        "stationName",
+        "totalCaptains",
+        "assignedToday",
+        "presentToday",
+        "absentToday",
+        CASE WHEN "totalCaptains" > 0 THEN ROUND(("presentToday" * 100.0 / "totalCaptains")::numeric, 2)::FLOAT ELSE 0 END AS "presentPercentage"
+      FROM depot_stats
+      ORDER BY "stationName" ASC
+    `;
+
     const result = await this.prisma.$queryRawUnsafe<any[]>(rawSql);
     return result;
   }

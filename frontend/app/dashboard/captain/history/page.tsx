@@ -2,12 +2,16 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useSearchParams } from "next/navigation";
 
 const LOCAL_API_URL = process.env.NEXT_PUBLIC_LOCAL_API_URL || "http://localhost:4000";
 import { Copyleft as CalendarDays, Map, Loader2 } from "lucide-react";
 import styles from "../../shared.module.css";
 
 export default function TripHistory() {
+  const searchParams = useSearchParams();
+  const captainIdParam = searchParams.get('captainId');
+  
   const [allHistory, setAllHistory] = useState<any[]>([]);
   const [history, setHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,10 +38,11 @@ export default function TripHistory() {
         if (!sessionStore) throw new Error("No user stored");
         
         const userSession = JSON.parse(sessionStore);
-        const activeUserId = userSession.id;
+        // Use captainId from URL if provided, otherwise use the logged-in user's ID
+        const captainIdToFetch = captainIdParam ? parseInt(captainIdParam) : userSession.id;
 
         // Fetch captain trip history from backend
-        const res = await axios.get(`${LOCAL_API_URL}/trips/captain-history?captainId=${activeUserId}`);
+        const res = await axios.get(`${LOCAL_API_URL}/trips/captain-history?captainId=${captainIdToFetch}`);
         
         if (res.data && res.data.length > 0) {
           // Sort real data descending by journey date
@@ -55,7 +60,7 @@ export default function TripHistory() {
       }
     };
     fetchHistory();
-  }, []);
+  }, [captainIdParam]);
 
   // Filter effect
   useEffect(() => {

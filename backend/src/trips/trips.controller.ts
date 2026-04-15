@@ -70,6 +70,12 @@ export class TripsController {
     return this.serializeBigInt(data);
   }
 
+  @Get('depot-summary')
+  async getDepotSummary() {
+    const data = await this.tripsService.getDepotSummary();
+    return this.serializeBigInt(data);
+  }
+
   @Get('week-assignments')
   async getWeekAssignments(@Query('userId') userId: string, @Query('startDate') startDate?: string) {
     if (!userId) return { success: false, message: 'userId is required' };
