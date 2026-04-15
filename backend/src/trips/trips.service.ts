@@ -210,7 +210,7 @@ export class TripsService {
   // 5. CAPTAIN HISTORY (Full trip list for a profile)
   async getCaptainHistory(captainId: number) {
     const rawSql = `
-      SELECT
+      SELECT DISTINCT
         t."id" AS "tripId",
         t."journeyDate",
         t."startedAt",
@@ -219,17 +219,17 @@ export class TripsService {
         s."name" AS "serviceName",
         st_src."name" AS "sourceStation",
         st_dest."name" AS "destinationStation",
-        MAX(CASE WHEN q."name" = 'Vehicle Number' THEN tq_v."answer" END) AS "vehicleNumber"
+        (SELECT tq_v."answer" FROM "public"."TripQuestions" tq_v
+         LEFT JOIN "public"."Questions" q_v ON tq_v."questionId" = q_v."id"
+         WHERE tq_v."tripId" = t."id" AND q_v."name" = 'Vehicle Number' LIMIT 1) AS "vehicleNumber"
       FROM "public"."TripQuestions" tq
-      LEFT JOIN "public"."Trips" t ON tq."tripId" = t."id"
+      INNER JOIN "public"."Questions" q ON tq."questionId" = q."id" AND q."name" IN ('Captain', 'Co-Captain')
+      INNER JOIN "public"."Trips" t ON tq."tripId" = t."id"
       LEFT JOIN "public"."Services" s ON t."serviceId" = s."id"
       LEFT JOIN "public"."Stations" st_src ON s."sourceId" = st_src."id"
       LEFT JOIN "public"."Stations" st_dest ON s."destinationId" = st_dest."id"
-      -- Self join or look up trip questions for this trip's vehicle number
-      LEFT JOIN "public"."TripQuestions" tq_v ON tq_v."tripId" = t."id"
-      LEFT JOIN "public"."Questions" q ON tq_v."questionId" = q."id" AND q."name" = 'Vehicle Number'
-      WHERE tq."answer" LIKE '${captainId}-%'
-      GROUP BY t."id", t."journeyDate", t."startedAt", t."endedAt", s."serviceNumber", s."name", st_src."name", st_dest."name"
+      WHERE tq."answer" LIKE CONCAT(${captainId}, '-%')
+      GROUP BY t."id", t."journeyDate", t."startedAt", t."endedAt", s."id", s."serviceNumber", s."name", st_src."id", st_src."name", st_dest."id", st_dest."name"
       ORDER BY t."journeyDate" DESC;
     `;
     return await this.prisma.$queryRawUnsafe<any[]>(rawSql);
@@ -478,6 +478,56 @@ export class TripsService {
       LEFT JOIN today_assignments ta ON cd."captainId" = ta."captainId"
       GROUP BY cd."captainId", cd."captainName", cd."depotStationId", cd."depotName", cd."mobile"
       ORDER BY cd."depotName", cd."captainName" ASC;
+    `;
+    
+    const result = await this.prisma.$queryRawUnsafe<any[]>(rawSql);
+    return result;
+  }
+
+  // 9. WEEK ASSIGNMENTS (For roster week view in depot manager dashboard)
+  async getWeekAssignments(userId: number, startDate?: string) {
+    // 1. Fetch the station(s) this manager is mapped to
+    const stations = await this.prisma.$queryRawUnsafe<any[]>(`
+      SELECT "A" FROM "public"."_StationsToUser" WHERE "B" = ${userId}
+    `);
+
+    if (!stations || stations.length === 0) {
+      return [];
+    }
+
+    const stationIds = stations.map(s => s.A).join(',');
+
+    // 2. Get all captain assignments for the specified week (Sunday to Saturday)
+    // If startDate is provided, use it; otherwise use current week starting from Sunday
+    const dateStr = startDate ? `'${startDate}'::DATE` : `CURRENT_DATE - INTERVAL '1 day' * EXTRACT(dow FROM CURRENT_DATE)::int`;
+    
+    const rawSql = `
+      WITH week_range AS (
+        SELECT 
+          ${dateStr} AS "weekStart",
+          ${dateStr} + INTERVAL '6 days' AS "weekEnd"
+      ),
+      captains_assigned AS (
+        SELECT DISTINCT
+          NULLIF(SPLIT_PART(tq."answer", '-', 1), '')::INTEGER AS "captainId",
+          t."journeyDate"::DATE
+        FROM "public"."TripQuestions" tq
+        LEFT JOIN "public"."Trips" t ON tq."tripId" = t."id"
+        LEFT JOIN "public"."Questions" q ON tq."questionId" = q."id"
+        LEFT JOIN "public"."User" u ON u."id" = NULLIF(SPLIT_PART(tq."answer", '-', 1), '')::INTEGER
+        CROSS JOIN week_range
+        WHERE q."name" IN ('Captain', 'Co-Captain')
+          AND t."journeyDate" >= week_range."weekStart"
+          AND t."journeyDate" <= week_range."weekEnd"
+          AND u."depotStationId" IN (${stationIds})
+          AND u."id" IS NOT NULL
+      )
+      SELECT 
+        "captainId",
+        "journeyDate"
+      FROM captains_assigned
+      WHERE "captainId" IS NOT NULL
+      ORDER BY "journeyDate", "captainId"
     `;
     
     const result = await this.prisma.$queryRawUnsafe<any[]>(rawSql);

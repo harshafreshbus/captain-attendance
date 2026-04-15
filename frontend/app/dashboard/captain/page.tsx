@@ -1,52 +1,30 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import { CheckCircle2, MapPin, Calendar, Activity, Loader2, Filter } from "lucide-react";
+import { CheckCircle2, MapPin, Calendar, Activity, Loader2, Filter, ArrowLeft } from "lucide-react";
 import { 
   PieChart, Pie, Cell, Legend, Tooltip as RechartsTooltip, ResponsiveContainer
 } from "recharts";
 import axios from "axios";
+import { useSearchParams, useRouter } from "next/navigation";
 import styles from "../shared.module.css";
 
 const LOCAL_API_URL = process.env.NEXT_PUBLIC_LOCAL_API_URL || "http://localhost:4000";
 
-const COLORS = ['#16a34a', '#cbd5e1'];
-
-// Mock Generator to simulate historical database
-const generateHistory = (daysBack: number) => {
-  const history = [];
-  const now = new Date();
-  for (let i = daysBack; i >= 1; i--) {
-    const d = new Date(now);
-    d.setDate(d.getDate() - i);
-    
-    // Simulate some variance
-    const r = Math.random();
-    let status = 'Present';
-    let percent = 100;
-
-    if (r > 0.9) {
-      status = 'Absent';
-      percent = 0;
-    }
-
-    history.push({
-      id: i,
-      dateFormatted: `${d.getDate()} ${d.toLocaleString('default', { month: 'short' })}`,
-      date: d.toISOString(),
-      route: "Depot A → City Center",
-      status,
-      percent
-    });
-  }
-  return history;
-};
+const COLORS = ['#16a34a'];
 
 export default function CaptainDashboard() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const captainIdParam = searchParams.get('captainId');
+  const captainNameParam = searchParams.get('captainName');
+  const isViewingOtherCaptain = !!captainIdParam;
+  
   const [liveTrip, setLiveTrip] = useState<any>(null);
   const [loadingTrip, setLoadingTrip] = useState(true);
   const [punching, setPunching] = useState(false);
   const [punchedIn, setPunchedIn] = useState(false);
+  const [displayName, setDisplayName] = useState<string>('');
   
   // New Productive Enhancements
   const [activeFilter, setActiveFilter] = useState<'7' | '30'>('7');
@@ -55,28 +33,47 @@ export default function CaptainDashboard() {
   const [calendarMonth, setCalendarMonth] = useState(new Date());
 
   useEffect(() => {
-    // Regenerate data when filter flips to animate UI
-    setHistoricalData(generateHistory(Number(activeFilter)));
-  }, [activeFilter]);
-
-  // Derived Metrics
-  const metrics = useMemo(() => {
-    if (!historicalData.length) return { present: 0, absent: 0, avg: 0 };
-    let p = 0, a = 0;
-    historicalData.forEach(h => {
-      if (h.status === 'Present') p++;
-      if (h.status === 'Absent') a++;
+    // Filter realTripsData based on date range from activeFilter
+    if (realTripsData.length === 0) {
+      setHistoricalData([]);
+      return;
+    }
+    
+    const daysBack = Number(activeFilter);
+    const now = new Date();
+    const cutoffDate = new Date(now);
+    cutoffDate.setDate(cutoffDate.getDate() - daysBack);
+    cutoffDate.setHours(0, 0, 0, 0);
+    
+    const filtered = realTripsData.filter((trip: any) => {
+      const tripDate = new Date(trip.journeyDate);
+      return tripDate >= cutoffDate;
     });
+    
+    // All trips in this endpoint are assignments = Present (with assignment)
+    const formattedData = filtered.map((trip: any) => ({
+      ...trip,
+      status: 'Present'
+    }));
+    
+    setHistoricalData(formattedData);
+  }, [realTripsData, activeFilter]);
+
+  // Derived Metrics - Calculate attendance based on assignments vs total days in period
+  const metrics = useMemo(() => {
+    const daysBack = Number(activeFilter);
+    const assignedCount = historicalData.length;
+    const attendancePercentage = Math.round((assignedCount / daysBack) * 100);
+    
     return {
-      present: p,
-      absent: a,
-      avg: Math.round((p / historicalData.length) * 100)
+      present: assignedCount,
+      absent: 0,
+      avg: attendancePercentage  // Percentage of days with assignments in the period
     };
-  }, [historicalData]);
+  }, [historicalData, activeFilter]);
 
   const pieData = [
-    { name: 'With Assignment', value: metrics.present },
-    { name: 'No Assignment', value: metrics.absent },
+    { name: 'Days With Assignment', value: metrics.present },
   ];
 
   // Calendar Helper Functions
@@ -138,6 +135,10 @@ export default function CaptainDashboard() {
     setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1));
   };
 
+  const handleGoBack = () => {
+    router.back();
+  };
+
   useEffect(() => {
     const fetchLiveTrip = async () => {
       try {
@@ -145,52 +146,43 @@ export default function CaptainDashboard() {
         if (!sessionStore) throw new Error("No user stored");
         
         const userSession = JSON.parse(sessionStore);
-        const activeUserId = userSession.id;
+        // Use captainId from URL if provided, otherwise use the logged-in user's ID
+        const captainIdToFetch = captainIdParam ? parseInt(captainIdParam) : userSession.id;
+        const nameToDisplay = captainNameParam ? decodeURIComponent(captainNameParam) : userSession.name || `Captain ${captainIdToFetch}`;
+        
+        setDisplayName(nameToDisplay);
 
-        const res = await axios.get(`${LOCAL_API_URL}/trips/live-assignments?userTypeId=4&userId=${activeUserId}`);
+        const res = await axios.get(`${LOCAL_API_URL}/trips/captain-history?captainId=${captainIdToFetch}`);
         if (res.data && res.data.length > 0) {
           // Sort real data descending by journey date
           const sortedData = res.data.sort((a: any, b: any) => new Date(b.journeyDate).getTime() - new Date(a.journeyDate).getTime());
           setLiveTrip(sortedData[0]); // Most recent is live trip
           setRealTripsData(sortedData); // Store all for history
         } else {
-          // No DB data exists for this specific Captain!
-          // We will inject a synthetic history so your UI Demo works gracefully.
-          const syntheticHistory = generateHistory(30).map((h, i) => ({
-             tripId: h.id,
-             serviceNumber: "ROUTE-DEMO",
-             journeyDate: h.date
-          }));
-          setRealTripsData(syntheticHistory);
+          // No data found
+          setLiveTrip(null);
+          setRealTripsData([]);
         }
       } catch (err) {
-        // Fallback display if database throws 500 error
-        setLiveTrip({
-           vehicleNumber: "FB-04-1234",
-           journeyDate: new Date().toISOString(),
-           serviceNumber: "ROUTE-42"
-        });
-        const syntheticHistory = generateHistory(30).map((h, i) => ({
-           tripId: h.id,
-           serviceNumber: "ROUTE-ERROR",
-           journeyDate: h.date
-        }));
-        setRealTripsData(syntheticHistory);
+        console.error("Error fetching trip data:", err);
+        setLiveTrip(null);
+        setRealTripsData([]);
       } finally {
         setLoadingTrip(false);
       }
     };
     fetchLiveTrip();
-  }, []);
+  }, [captainIdParam, captainNameParam]);
 
   const handlePunchIn = async () => {
     setPunching(true);
     try {
       const sessionStore = localStorage.getItem("user");
       const activeUserId = sessionStore ? JSON.parse(sessionStore).id : 0;
+      const captainIdToUse = captainIdParam ? parseInt(captainIdParam) : activeUserId;
 
       await axios.post(`${LOCAL_API_URL}/attendance/punch`, {
-         captainId: activeUserId,
+         captainId: captainIdToUse,
          tripId: liveTrip?.tripId || "fallback_trip_1",
          status: "Present"
       });
@@ -206,7 +198,31 @@ export default function CaptainDashboard() {
     <div>
       {/* Productive Header with Dynamic Filter */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 600, color: 'var(--text-dark)' }}>My Performance Workspace</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {isViewingOtherCaptain && (
+            <button 
+              onClick={handleGoBack}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '8px 12px',
+                borderRadius: '6px',
+                border: '1px solid #e2e8f0',
+                backgroundColor: '#f8fafc',
+                cursor: 'pointer',
+                fontWeight: 600,
+                color: 'var(--brand-blue)'
+              }}
+              title="Back to roster"
+            >
+              <ArrowLeft size={16} /> Back
+            </button>
+          )}
+          <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 600, color: 'var(--text-dark)' }}>
+            {isViewingOtherCaptain ? `${displayName}'s Dashboard` : 'My Performance Workspace'}
+          </h1>
+        </div>
         <div style={{ display: 'flex', gap: '8px', padding: '4px', backgroundColor: '#f1f5f9', borderRadius: '8px' }}>
            <button 
              onClick={() => setActiveFilter('7')}
@@ -291,17 +307,6 @@ export default function CaptainDashboard() {
           </div>
           <div className={styles.cardValue}>{metrics.present}</div>
           <div style={{ fontSize: '12px', color: 'var(--muted)' }}>Days assigned (Present)</div>
-        </div>
-
-        <div className={styles.card}>
-          <div className={styles.cardHeader}>
-            <div className={styles.cardLabel}>No Assignment</div>
-            <div className={`${styles.iconWrapper} ${styles.iconRed}`}>
-              <Calendar size={20} />
-            </div>
-          </div>
-          <div className={styles.cardValue}>{metrics.absent}</div>
-          <div style={{ fontSize: '12px', color: 'var(--muted)' }}>Days without assignment</div>
         </div>
       </div>
 

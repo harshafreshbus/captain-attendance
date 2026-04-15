@@ -70,6 +70,13 @@ export class TripsController {
     return this.serializeBigInt(data);
   }
 
+  @Get('week-assignments')
+  async getWeekAssignments(@Query('userId') userId: string, @Query('startDate') startDate?: string) {
+    if (!userId) return { success: false, message: 'userId is required' };
+    const data = await this.tripsService.getWeekAssignments(parseInt(userId, 10), startDate);
+    return data;
+  }
+
   private serializeBigInt(data: any[]) {
     return data.map((row: any) => {
       const newRow = { ...row };

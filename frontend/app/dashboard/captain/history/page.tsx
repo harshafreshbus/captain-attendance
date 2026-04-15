@@ -15,10 +15,17 @@ export default function TripHistory() {
   // Date Filtering State
   const [startDate, setStartDate] = useState<string>(() => {
     const d = new Date();
-    d.setDate(d.getDate() - 7);
+    d.setDate(d.getDate() - 30);
     return d.toISOString().split('T')[0];
   });
   const [endDate, setEndDate] = useState<string>(new Date().toISOString().split('T')[0]);
+  const [tempStartDate, setTempStartDate] = useState<string>(startDate);
+  const [tempEndDate, setTempEndDate] = useState<string>(endDate);
+
+  useEffect(() => {
+    setTempStartDate(startDate);
+    setTempEndDate(endDate);
+  }, []);
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -29,32 +36,20 @@ export default function TripHistory() {
         const userSession = JSON.parse(sessionStore);
         const activeUserId = userSession.id;
 
-        // Fetching real backend data array
-        const res = await axios.get(`${LOCAL_API_URL}/trips/live-assignments?userTypeId=4&userId=${activeUserId}`);
+        // Fetch captain trip history from backend
+        const res = await axios.get(`${LOCAL_API_URL}/trips/captain-history?captainId=${activeUserId}`);
         
         if (res.data && res.data.length > 0) {
           // Sort real data descending by journey date
           const sortedData = res.data.sort((a: any, b: any) => new Date(b.journeyDate).getTime() - new Date(a.journeyDate).getTime());
-          
           setAllHistory(sortedData);
         } else {
-            // Failsafe Mock for 2065 or accounts with absolutely 0 rows in backend
-            const synthetic = [];
-            const now = new Date();
-            for (let i = 0; i < 30; i++) {
-                const d = new Date(now);
-                d.setDate(d.getDate() - i);
-                synthetic.push({
-                    tripId: i,
-                    serviceNumber: "ROUTE-DEMO",
-                    vehicleNumber: "FB-04-9999",
-                    journeyDate: d.toISOString()
-                });
-            }
-            setAllHistory(synthetic);
+          // No data found
+          setAllHistory([]);
         }
       } catch (err) {
         console.error("History fetch failed:", err);
+        setAllHistory([]);
       } finally {
         setLoading(false);
       }
@@ -95,8 +90,8 @@ export default function TripHistory() {
             <label style={{ fontSize: '11px', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>From</label>
             <input 
               type="date" 
-              value={startDate} 
-              onChange={(e) => setStartDate(e.target.value)}
+              value={tempStartDate} 
+              onChange={(e) => setTempStartDate(e.target.value)}
               style={{ padding: '6px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px' }}
             />
           </div>
@@ -104,11 +99,20 @@ export default function TripHistory() {
             <label style={{ fontSize: '11px', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>To</label>
             <input 
               type="date" 
-              value={endDate} 
-              onChange={(e) => setEndDate(e.target.value)}
+              value={tempEndDate} 
+              onChange={(e) => setTempEndDate(e.target.value)}
               style={{ padding: '6px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px' }}
             />
           </div>
+          <button 
+            onClick={() => {
+              setStartDate(tempStartDate);
+              setEndDate(tempEndDate);
+            }}
+            style={{ padding: '8px 16px', backgroundColor: 'var(--brand-blue)', color: 'white', border: 'none', borderRadius: '6px', fontWeight: 600, cursor: 'pointer', fontSize: '13px', alignSelf: 'flex-end' }}
+          >
+            Apply
+          </button>
         </div>
       </div>
 
@@ -126,8 +130,8 @@ export default function TripHistory() {
             <tbody>
               {history.length > 0 ? history.map((trip: any, index: number) => {
                  const d = new Date(trip.journeyDate);
-                 // Simulating DB attendance status until table push occurs
-                 const status = index % 10 === 0 ? 'Absent' : 'Present'; 
+                 // Status is always Present when trip is assigned (from this endpoint)
+                 const status = 'Present'; 
                  return (
                 <tr key={trip.tripId || index} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background-color 0.2s' }}>
                   <td style={{ padding: '20px 24px' }}>
@@ -139,17 +143,14 @@ export default function TripHistory() {
                   <td style={{ padding: '20px 24px' }}>
                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '15px' }}>
                         <Map size={16} color="var(--brand-blue)" />
-                        Service {trip.serviceNumber}
+                        {trip.serviceName ? `${trip.serviceName} - ${trip.serviceNumber}` : `Service ${trip.serviceNumber}`}
                     </div>
                   </td>
                   <td style={{ padding: '20px 24px', fontFamily: 'monospace', fontWeight: 600, fontSize: '14px', color: '#475569' }}>
                     {trip.vehicleNumber || 'Unassigned'}
                   </td>
                   <td style={{ padding: '20px 24px', textAlign: 'right' }}>
-                    <span className={`${styles.badge} ${
-                      status === 'Present' ? styles.badgePresent :
-                      status === 'Absent' ? styles.badgeAbsent : ''
-                    }`} style={{ display: 'inline-flex', padding: '6px 12px' }}>{status}</span>
+                    <span style={{ display: 'inline-flex', padding: '6px 12px', backgroundColor: '#dcfce7', color: '#16a34a', borderRadius: '6px', fontSize: '12px', fontWeight: 500 }}>Present - Assigned</span>
                   </td>
                 </tr>
               )}) : (

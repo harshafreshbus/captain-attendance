@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import { Users, UserCheck, UserX, AlertTriangle, Loader2, MapPin, Bus, Calendar, X, ExternalLink, History } from "lucide-react";
+import { Users, UserCheck, UserX, Loader2, Bus, X, History } from "lucide-react";
 import axios from "axios";
 import styles from "../shared.module.css";
 
@@ -297,7 +297,18 @@ export default function DepotDashboard() {
 
         <div className={styles.card}>
           <div className={styles.cardHeader}>
-            <div className={styles.cardLabel}>Not Assigned</div>
+            <div className={styles.cardLabel}>Assigned Yesterday</div>
+            <div className={`${styles.iconWrapper} ${styles.iconBlue}`}>
+              <UserCheck size={20} />
+            </div>
+          </div>
+          <div className={styles.cardValue}>{unassignedData?.assignedYesterday || 0}</div>
+          <div style={{ fontSize: '12px', color: 'var(--muted)', fontWeight: 600 }}>Captains assigned</div>
+        </div>
+
+        <div className={styles.card}>
+          <div className={styles.cardHeader}>
+            <div className={styles.cardLabel}>Not Assigned Yesterday</div>
             <div className={`${styles.iconWrapper} ${styles.iconRed}`}>
               <UserX size={20} />
             </div>
@@ -311,7 +322,7 @@ export default function DepotDashboard() {
       <div className={styles.twoColLayout}>
         {/* Left: Current Captain Roster */}
         <div className={styles.card}>
-          <h2 className={styles.sectionTitle}>Current Captain Roster</h2>
+          <h2 className={styles.sectionTitle}>Current Captain Attendance</h2>
           <p style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '16px' }}>Click on a captain to view their full historical trip data and service profile.</p>
           <div className={styles.tableWrapper}>
             <table className={styles.table}>

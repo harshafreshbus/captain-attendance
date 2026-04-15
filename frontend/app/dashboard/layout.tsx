@@ -40,8 +40,7 @@ export default function DashboardLayout({
     } else if (pathname.includes('/depot')) {
       return [
         { name: "Depot Status", href: "/dashboard/depot", icon: <LayoutDashboard size={20} /> },
-        { name: "Captain Roster", href: "/dashboard/depot/roster", icon: <Users size={20} /> },
-        { name: "Live Map", href: "#", icon: <Map size={20} /> }
+        { name: "Captain Attendance", href: "/dashboard/depot/roster", icon: <Users size={20} /> }
       ];
     } else {
       return [
